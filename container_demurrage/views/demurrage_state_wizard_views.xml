@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- Reabrir -->
+        <record id="view_demurrage_reopen_wizard_form" model="ir.ui.view">
+            <field name="name">demurrage.reopen.wizard.form</field>
+            <field name="model">demurrage.reopen.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Reabrir contenedor">
+                    <group>
+                        <field name="container_id" readonly="1"/>
+                        <field name="reason"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
+                        <button string="Cancelar" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Solicitar corrección -->
+        <record id="view_demurrage_correction_request_wizard_form" model="ir.ui.view">
+            <field name="name">demurrage.correction.request.wizard.form</field>
+            <field name="model">demurrage.correction.request.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Solicitar corrección">
+                    <group>
+                        <field name="container_id" readonly="1"/>
+                        <field name="reason"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
+                        <button string="Cancelar" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Cancelar -->
+        <record id="view_demurrage_cancel_wizard_form" model="ir.ui.view">
+            <field name="name">demurrage.cancel.wizard.form</field>
+            <field name="model">demurrage.cancel.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Cancelar contenedor">
+                    <group>
+                        <field name="container_id"/>
+                        <field name="reason"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
+                        <button string="Cancelar" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <!-- Marcar facturado -->
+        <record id="view_demurrage_mark_invoiced_wizard_form" model="ir.ui.view">
+            <field name="name">demurrage.mark.invoiced.wizard.form</field>
+            <field name="model">demurrage.mark.invoiced.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Marcar facturado">
+                    <group>
+                        <field name="container_id" readonly="1"/>
+                        <field name="invoice_reference"/>
+                        <field name="invoice_date"/>
+                    </group>
+                    <footer>
+                        <button name="action_confirm" string="Confirmar" type="object" class="btn-primary"/>
+                        <button string="Cancelar" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

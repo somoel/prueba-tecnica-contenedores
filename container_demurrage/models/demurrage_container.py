@@ -394,9 +394,11 @@ class DemurrageContainer(models.Model):
                     raise UserError(
                         "Reabra la facturación antes de modificar fechas o datos del contenedor.")
         if "invoiced" in vals or "cancelled" in vals:
-            if not self.env.context.get("demurrage_transition"):
-                raise UserError(
-                    "No se puede modificar el estado de facturación directamente.")
+            if not self.env.context.get("demurrage_transition") and not self.env.is_superuser():
+                if not self.env.user.has_group(
+                        "container_demurrage.group_demurrage_manager"):
+                    raise UserError(
+                        "No se puede modificar el estado de facturación directamente.")
         return super().write(vals)
 
     def action_mark_invoiced(self, invoice_reference=None, invoice_date=None):
@@ -485,6 +487,50 @@ class DemurrageContainer(models.Model):
             "mail.mail_activity_data_todo", user_id=user.id,
             summary="Solicitud de corrección", note=reason)
         return True
+
+    def action_open_reopen_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Reabrir contenedor",
+            "res_model": "demurrage.reopen.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_container_id": self.id},
+        }
+
+    def action_open_correction_request_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Solicitar corrección",
+            "res_model": "demurrage.correction.request.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_container_id": self.id},
+        }
+
+    def action_open_cancel_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Cancelar contenedor",
+            "res_model": "demurrage.cancel.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_container_id": self.id},
+        }
+
+    def action_open_mark_invoiced_wizard(self):
+        self.ensure_one()
+        return {
+            "type": "ir.actions.act_window",
+            "name": "Marcar facturado",
+            "res_model": "demurrage.mark.invoiced.wizard",
+            "view_mode": "form",
+            "target": "new",
+            "context": {"default_container_id": self.id},
+        }
 
     def action_refresh_estimate(self):
         self.ensure_one()

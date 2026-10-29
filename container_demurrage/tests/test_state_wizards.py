@@ -78,7 +78,7 @@ class TestStateWizards(TransactionCase):
             "container_id": c.id,
             "reason": "motivo",
         })
-        with self.assertRaises((AccessError, UserError)):
+        with self.assertRaises(AccessError):
             wizard.with_user(self.ops_user).action_confirm()
 
     def test_reopen_wizard_billing(self):

@@ -11,6 +11,7 @@
     "data": [
         "security/demurrage_security.xml",
         "security/ir.model.access.csv",
+        "views/demurrage_state_wizard_views.xml",
     ],
     "demo": [],
 }
