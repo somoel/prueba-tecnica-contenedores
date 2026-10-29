@@ -1,0 +1,75 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  odoo:
+    if: github.event_name == 'push' || (github.event_name == 'pull_request' && !github.event.pull_request.draft)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: odoo
+          POSTGRES_PASSWORD: odoo
+          POSTGRES_DB: postgres
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U odoo"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Wait for PostgreSQL
+        run: |
+          for i in $(seq 1 30); do
+            if docker run --rm --network host postgres:16 pg_isready -h 127.0.0.1 -U odoo; then
+              exit 0
+            fi
+            sleep 2
+          done
+          exit 1
+
+      - name: Run module tests
+        run: |
+          docker run --rm --network host \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            -v "$PWD/container_demurrage:/mnt/extra-addons/container_demurrage" \
+            odoo:17.0 \
+            --addons-path=/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons \
+            --db_host=127.0.0.1 --db_port=5432 --db_user=odoo --db_password=odoo \
+            -d test_db -i container_demurrage --without-demo=all \
+            --test-enable --test-tags=/container_demurrage --stop-after-init --log-level=test
+
+      - name: Clean install without demo
+        run: |
+          docker run --rm --network host \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            -v "$PWD/container_demurrage:/mnt/extra-addons/container_demurrage" \
+            odoo:17.0 \
+            --addons-path=/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons \
+            --db_host=127.0.0.1 --db_port=5432 --db_user=odoo --db_password=odoo \
+            -d clean_db -i container_demurrage --without-demo=all \
+            --stop-after-init --log-level=info
+
+      - name: Install with demo data
+        run: |
+          docker run --rm --network host \
+            -e PYTHONDONTWRITEBYTECODE=1 \
+            -v "$PWD/container_demurrage:/mnt/extra-addons/container_demurrage" \
+            odoo:17.0 \
+            --addons-path=/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons \
+            --db_host=127.0.0.1 --db_port=5432 --db_user=odoo --db_password=odoo \
+            -d demo_db -i container_demurrage \
+            --stop-after-init --log-level=info
