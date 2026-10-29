@@ -160,7 +160,7 @@ class TestExtendedCases(TransactionCase):
         self.assertEqual(c.demurrage_days, 1)
         self.assertEqual(c.carrier_charge_usd, 35)
         self.assertEqual(c.customer_charge_usd, 38.50)
-        self.assertEqual(c.calculation_status, "ok")
+        self.assertEqual(c.calculation_status, "missing_rate")
 
     def test_case_8(self):
         c = self.c8

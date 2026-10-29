@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from datetime import date
+from datetime import date, timedelta
 
 from odoo import models, fields, api
 from odoo.exceptions import ValidationError
@@ -74,6 +74,8 @@ class DemurrageContainer(models.Model):
     missing_tariff = fields.Boolean(compute="_compute_demurrage", store=True)
     missing_exchange_rate = fields.Boolean(compute="_compute_demurrage", store=True)
     is_estimate = fields.Boolean(compute="_compute_demurrage", store=True)
+    is_due_soon = fields.Boolean(compute="_compute_demurrage", store=True)
+    is_overdue = fields.Boolean(compute="_compute_demurrage", store=True)
     due_date = fields.Date(compute="_compute_demurrage", store=True)
     tier_breakdown = fields.Text(compute="_compute_demurrage")
     calculation_status = fields.Selection(
@@ -171,6 +173,8 @@ class DemurrageContainer(models.Model):
             record.missing_tariff = False
             record.missing_exchange_rate = False
             record.is_estimate = False
+            record.is_due_soon = False
+            record.is_overdue = False
             record.due_date = False
             record.tier_breakdown = ""
             record.calculation_status = "pending"
@@ -233,21 +237,39 @@ class DemurrageContainer(models.Model):
 
             # TRM
             record.exchange_rate_date = cutoff
-            usd = self.env.ref("base.USD")
-            cop = self.env.ref("base.COP")
-            rates = self.env["res.currency"].browse(
-                [usd.id, cop.id])._get_rates(record.company_id, cutoff)
-            rate_usd = rates.get(usd.id, 1.0) or 1.0
-            rate_cop = rates.get(cop.id, 1.0) or 1.0
-            exchange_rate = (rate_cop / rate_usd) if rate_usd else 0.0
-            record.exchange_rate = exchange_rate
+            result = record._get_exchange_rate(cutoff)
+            if isinstance(result, tuple):
+                exchange_rate, found = result
+            else:
+                exchange_rate, found = result, True
+            if not found or exchange_rate is None:
+                record.exchange_rate = 0.0
+                record.missing_exchange_rate = bool(record.customer_charge_usd)
+                record.customer_charge_cop = 0.0
+                if record.customer_charge_usd:
+                    record.missing_exchange_rate = True
+                    record.calculation_status = "missing_rate"
+                else:
+                    record.missing_exchange_rate = False
+                    record.calculation_status = "ok"
+            else:
+                record.exchange_rate = exchange_rate
+                record.missing_exchange_rate = False
+                if record.customer_charge_usd:
+                    record.customer_charge_cop = round(
+                        record.customer_charge_usd * exchange_rate, 2)
+                record.calculation_status = "ok"
 
-            missing_rate = False
-            record.missing_exchange_rate = missing_rate
-            if record.customer_charge_usd:
-                record.customer_charge_cop = (
-                    record.customer_charge_usd * exchange_rate)
-            record.calculation_status = "ok"
+            # vencimiento
+            due_soon_days = int(float(self.env["ir.config_parameter"].sudo().get_param(
+                "container_demurrage.due_soon_days", "2") or 2))
+            record.is_due_soon = False
+            record.is_overdue = False
+            if record.state == "open" and record.due_date:
+                as_of = record.as_of_date or fields.Date.today()
+                record.is_overdue = record.due_date < as_of
+                record.is_due_soon = (
+                    as_of <= record.due_date <= as_of + timedelta(days=due_soon_days))
 
     def _find_tariff(self):
         self.ensure_one()
@@ -265,6 +287,36 @@ class DemurrageContainer(models.Model):
         ]
         return self.env["demurrage.tariff"].search(
             domain, order="valid_from desc", limit=1)
+
+    def _get_exchange_rate(self, date):
+        self.ensure_one()
+        company = self.company_id or self.env.company
+        root = company.root_id
+        company_currency = company.currency_id
+
+        def _rate_for(currency):
+            if not currency:
+                return None, False
+            if currency == company_currency:
+                return 1.0, True
+            rec = self.env["res.currency.rate"].search([
+                ("currency_id", "=", currency.id),
+                ("name", "<=", date),
+                ("company_id", "in", [False, root.id]),
+            ], order="name desc", limit=1)
+            if not rec:
+                return None, False
+            return rec.rate, True
+
+        rate_usd, ok_usd = _rate_for(self.currency_id)
+        if not ok_usd:
+            return None, False
+        rate_cop, ok_cop = _rate_for(self.cop_currency_id)
+        if not ok_cop:
+            return None, False
+        if not rate_usd:
+            return None, False
+        return (rate_cop / rate_usd), True
 
     def _find_agreement(self):
         self.ensure_one()
