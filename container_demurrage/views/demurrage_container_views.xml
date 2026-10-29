@@ -60,6 +60,8 @@
                         <button name="action_open_cancel_wizard" type="object"
                                 string="Cancelar"
                                 invisible="state in ('cancelled','invoiced')"/>
+                        <button name="%(container_demurrage.action_report_demurrage_settlement)d"
+                                type="action" string="Liquidación"/>
                     </header>
                     <sheet>
                         <group string="Identificación">

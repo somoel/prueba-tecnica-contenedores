@@ -46,6 +46,13 @@ class TestReports(TransactionCase):
             "discharge_date": date(2026, 3, 2),
             "return_date": date(2026, 3, 20),
         })
+        cop = cls.env.ref("base.COP")
+        cls.env["res.currency.rate"].create({
+            "currency_id": cop.id,
+            "name": date(2026, 1, 1),
+            "rate": 4000.0,
+            "company_id": cls.container.company_id.id,
+        })
         assert cls.container.customer_charge_usd == 1386.0
         assert cls.container.carrier_charge_usd == 1260.0
 

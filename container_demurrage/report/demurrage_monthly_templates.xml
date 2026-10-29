@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_demurrage_monthly">
+        <t t-call="web.html_container">
+            <t t-call="web.external_layout">
+                <div class="page">
+                    <h2>Reporte mensual de demoras</h2>
+                    <div>Desde <t t-esc="date_from"/> hasta <t t-esc="date_to"/></div>
+                    <table class="table table-sm">
+                        <thead>
+                            <tr>
+                                <th>Cliente</th>
+                                <th>Naviera</th>
+                                <th>Pagado</th>
+                                <th>Recobrado</th>
+                                <th>Diferencia</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <t t-foreach="rows" t-as="row">
+                                <tr>
+                                    <td><t t-esc="row['customer']"/></td>
+                                    <td><t t-esc="row['carrier']"/></td>
+                                    <td><t t-esc="'%.2f' % row['paid']"/></td>
+                                    <td><t t-esc="'%.2f' % row['recovered']"/></td>
+                                    <td><t t-esc="'%.2f' % row['difference']"/></td>
+                                </tr>
+                            </t>
+                        </tbody>
+                    </table>
+                    <div>Totales: pagado <t t-esc="'%.2f' % sum(r['paid'] for r in rows)"/>
+                        recobrado <t t-esc="'%.2f' % sum(r['recovered'] for r in rows)"/>
+                        diferencia <t t-esc="'%.2f' % sum(r['difference'] for r in rows)"/>
+                    </div>
+                </div>
+            </t>
+        </t>
+    </template>
+</odoo>

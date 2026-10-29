@@ -11,3 +11,4 @@ from . import demurrage_correction
 from . import demurrage_import
 from . import demurrage_carrier_invoice
 from . import account_move
+from . import demurrage_report

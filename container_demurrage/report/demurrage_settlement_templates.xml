@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="report_demurrage_settlement">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.external_layout">
+                    <div class="page">
+                        <h2>Liquidación de demoras</h2>
+                        <div>Cliente: <span t-field="o.partner_id.name"/></div>
+                        <div>BL: <span t-field="o.bl_id.name"/></div>
+                        <div>Contenedor: <span t-field="o.container_number"/></div>
+                        <div>Naviera: <span t-field="o.shipping_line_id.name"/></div>
+                        <div>Descarga: <span t-field="o.discharge_date"/> Devolución: <span t-field="o.return_date"/></div>
+                        <div>Días fuera: <span t-esc="o.days_out"/></div>
+                        <t t-if="o.is_estimate">
+                            <p><strong>ESTIMADO</strong></p>
+                        </t>
+                        <table class="table table-sm">
+                            <thead>
+                                <tr>
+                                    <th>Tramo</th>
+                                    <th>Días</th>
+                                    <th>Tarifa</th>
+                                    <th>Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="o._get_breakdown()" t-as="line">
+                                    <tr>
+                                        <td><t t-esc="line['label']"/></td>
+                                        <td><t t-esc="line['days']"/></td>
+                                        <td><t t-esc="line['rate']"/></td>
+                                        <td><t t-esc="'%.2f' % line['subtotal']"/></td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div>Total naviera: <t t-esc="'%.2f' % o.carrier_charge_usd"/></div>
+                        <div>Total cliente: <t t-esc="'%.2f' % o.customer_charge_usd"/></div>
+                        <div>Adjuntos EIR:
+                            <t t-foreach="o.eir_attachment_ids" t-as="att">
+                                <span t-esc="att.name"/>
+                            </t>
+                        </div>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+</odoo>

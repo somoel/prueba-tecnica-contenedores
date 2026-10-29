@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_demurrage_monthly_report_wizard_form" model="ir.ui.view">
+        <field name="name">demurrage.monthly.report.wizard.form</field>
+        <field name="model">demurrage.monthly.report.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Reporte mensual">
+                <group>
+                    <field name="date_from"/>
+                    <field name="date_to"/>
+                    <field name="company_id"/>
+                </group>
+                <footer>
+                    <button name="action_print" string="Imprimir" type="object" class="btn-primary"/>
+                    <button string="Cancelar" class="btn-secondary" special="cancel"/>
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_demurrage_monthly_report_wizard" model="ir.actions.act_window">
+        <field name="name">Reporte mensual</field>
+        <field name="res_model">demurrage.monthly.report.wizard</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <menuitem id="menu_demurrage_monthly_report" name="Reporte mensual"
+              parent="menu_demurrage_analysis"
+              action="action_demurrage_monthly_report_wizard" sequence="30"/>
+</odoo>

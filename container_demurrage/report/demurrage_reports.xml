@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="action_report_demurrage_settlement" model="ir.actions.report">
+        <field name="name">Liquidación</field>
+        <field name="model">demurrage.container</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">container_demurrage.report_demurrage_settlement</field>
+        <field name="report_file">container_demurrage.report_demurrage_settlement</field>
+        <field name="paperformat_id" ref="base.paperformat_euro"/>
+    </record>
+
+    <record id="action_report_demurrage_monthly" model="ir.actions.report">
+        <field name="name">Reporte mensual</field>
+        <field name="model">demurrage.monthly.report.wizard</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">container_demurrage.report_demurrage_monthly</field>
+        <field name="report_file">container_demurrage.report_demurrage_monthly</field>
+    </record>
+</odoo>
