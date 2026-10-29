@@ -4,3 +4,5 @@ from . import demurrage_shipping_line
 from . import demurrage_tariff
 from . import demurrage_customer_agreement
 from . import res_partner
+from . import demurrage_bl
+from . import demurrage_container

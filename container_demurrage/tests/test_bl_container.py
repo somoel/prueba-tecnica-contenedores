@@ -162,6 +162,7 @@ class TestBLContainer(TransactionCase):
         self.assertEqual(c2.discharge_date, date(2026, 5, 5))
 
         # action
+        bl.discharge_date = False
         c3 = self.Container.create(self._container_vals(
             bl, container_number="MSCU3333333"))
         bl.discharge_date = date(2026, 4, 4)
