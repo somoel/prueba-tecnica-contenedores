@@ -18,7 +18,7 @@ class TestViews(TransactionCase):
 
     def test_get_views(self):
         for vtype in ("form", "tree", "search"):
-            self.env["demurrage.container"].get_views([(vtype, False)])
+            self.env["demurrage.container"].get_view(view_type=vtype)
 
     def test_filters_in_arch(self):
         view = self.env.ref("container_demurrage.view_demurrage_container_search")

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_demurrage_bl_tree" model="ir.ui.view">
+            <field name="name">demurrage.bl.tree</field>
+            <field name="model">demurrage.bl</field>
+            <field name="arch" type="xml">
+                <tree string="BLs">
+                    <field name="name"/>
+                    <field name="shipping_line_id"/>
+                    <field name="partner_id"/>
+                    <field name="discharge_date"/>
+                    <field name="container_count"/>
+                    <field name="has_mixed_discharge_dates"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_demurrage_bl_form" model="ir.ui.view">
+            <field name="name">demurrage.bl.form</field>
+            <field name="model">demurrage.bl</field>
+            <field name="arch" type="xml">
+                <form string="BL">
+                    <header>
+                        <button name="action_apply_discharge_date" type="object"
+                                string="Aplicar fecha de descarga"/>
+                    </header>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="shipping_line_id"/>
+                            <field name="partner_id"/>
+                            <field name="discharge_date"/>
+                            <field name="container_count" readonly="1"/>
+                            <field name="has_mixed_discharge_dates" readonly="1"/>
+                        </group>
+                        <field name="container_ids" editable="bottom">
+                            <tree>
+                                <field name="container_number"/>
+                                <field name="container_type_id" string="Tipo"/>
+                                <field name="discharge_date"/>
+                                <field name="return_date"/>
+                                <field name="state"/>
+                                <field name="days_out"/>
+                                <field name="carrier_charge_usd"/>
+                                <field name="customer_charge_usd"/>
+                            </tree>
+                        </field>
+                        <group>
+                            <field name="notes"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_demurrage_bl_search" model="ir.ui.view">
+            <field name="name">demurrage.bl.search</field>
+            <field name="model">demurrage.bl</field>
+            <field name="arch" type="xml">
+                <search string="BLs">
+                    <field name="name"/>
+                    <field name="shipping_line_id"/>
+                    <field name="partner_id"/>
+                </search>
+            </field>
+        </record>
+
+    </data>
+</odoo>

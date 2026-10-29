@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_res_config_settings_form_inherit_demurrage" model="ir.ui.view">
+            <field name="name">res.config.settings.form.inherit.demurrage</field>
+            <field name="model">res.config.settings</field>
+            <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//app[@name='general_settings']" position="inside">
+                    <div class="app_settings_block" data-key="container_demurrage">
+                        <h2>Demoras</h2>
+                        <div class="row mt16 o_settings_container">
+                            <div class="col-12 col-lg-6 o_setting_box">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="default_admin_fee_percent"/>
+                                    <field name="default_admin_fee_percent"/>
+                                    <label for="due_soon_days"/>
+                                    <field name="due_soon_days"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="view_res_partner_form_inherit_demurrage" model="ir.ui.view">
+            <field name="name">res.partner.form.inherit.demurrage</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//notebook" position="inside">
+                    <page string="Acuerdos">
+                        <field name="agreement_ids">
+                            <tree>
+                                <field name="shipping_line_id"/>
+                                <field name="extra_free_days"/>
+                                <field name="admin_fee_percent"/>
+                                <field name="active"/>
+                            </tree>
+                        </field>
+                    </page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

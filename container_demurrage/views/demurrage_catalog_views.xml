@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- Shipping lines (navieras) -->
+        <record id="view_demurrage_shipping_line_tree" model="ir.ui.view">
+            <field name="name">demurrage.shipping.line.tree</field>
+            <field name="model">demurrage.shipping.line</field>
+            <field name="arch" type="xml">
+                <tree string="Navieras">
+                    <field name="name"/>
+                    <field name="code"/>
+                    <field name="notes"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_demurrage_shipping_line_form" model="ir.ui.view">
+            <field name="name">demurrage.shipping.line.form</field>
+            <field name="model">demurrage.shipping.line</field>
+            <field name="arch" type="xml">
+                <form string="Naviera">
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="code"/>
+                            <field name="notes"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Container types -->
+        <record id="view_demurrage_container_type_tree" model="ir.ui.view">
+            <field name="name">demurrage.container.type.tree</field>
+            <field name="model">demurrage.container.type</field>
+            <field name="arch" type="xml">
+                <tree string="Tipos de contenedor">
+                    <field name="code"/>
+                    <field name="name"/>
+                    <field name="description"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_demurrage_container_type_form" model="ir.ui.view">
+            <field name="name">demurrage.container.type.form</field>
+            <field name="model">demurrage.container.type</field>
+            <field name="arch" type="xml">
+                <form string="Tipo de contenedor">
+                    <sheet>
+                        <group>
+                            <field name="code"/>
+                            <field name="name"/>
+                            <field name="description"/>
+                            <field name="active"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Tariffs -->
+        <record id="view_demurrage_tariff_tree" model="ir.ui.view">
+            <field name="name">demurrage.tariff.tree</field>
+            <field name="model">demurrage.tariff</field>
+            <field name="arch" type="xml">
+                <tree string="Tarifas">
+                    <field name="name"/>
+                    <field name="shipping_line_id"/>
+                    <field name="container_type_id"/>
+                    <field name="valid_from"/>
+                    <field name="valid_to"/>
+                    <field name="free_days"/>
+                    <field name="tier_count"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_demurrage_tariff_form" model="ir.ui.view">
+            <field name="name">demurrage.tariff.form</field>
+            <field name="model">demurrage.tariff</field>
+            <field name="arch" type="xml">
+                <form string="Tarifa">
+                    <sheet>
+                        <group>
+                            <field name="shipping_line_id"/>
+                            <field name="container_type_id"/>
+                            <field name="valid_from"/>
+                            <field name="valid_to"/>
+                            <field name="free_days"/>
+                            <field name="currency_id"/>
+                            <field name="company_id"/>
+                            <field name="active"/>
+                        </group>
+                        <field name="tier_ids" editable="bottom">
+                            <tree>
+                                <field name="day_from"/>
+                                <field name="day_to" help="0 = sin límite"/>
+                                <field name="rate_per_day"/>
+                                <field name="name" readonly="1"/>
+                            </tree>
+                        </field>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+        <!-- Customer agreements -->
+        <record id="view_demurrage_customer_agreement_tree" model="ir.ui.view">
+            <field name="name">demurrage.customer.agreement.tree</field>
+            <field name="model">demurrage.customer.agreement</field>
+            <field name="arch" type="xml">
+                <tree string="Acuerdos">
+                    <field name="partner_id"/>
+                    <field name="shipping_line_id"/>
+                    <field name="extra_free_days"/>
+                    <field name="admin_fee_percent"/>
+                    <field name="notes"/>
+                    <field name="active"/>
+                </tree>
+            </field>
+        </record>
+        <record id="view_demurrage_customer_agreement_form" model="ir.ui.view">
+            <field name="name">demurrage.customer.agreement.form</field>
+            <field name="model">demurrage.customer.agreement</field>
+            <field name="arch" type="xml">
+                <form string="Acuerdo">
+                    <sheet>
+                        <group>
+                            <field name="partner_id"/>
+                            <field name="shipping_line_id"/>
+                            <field name="extra_free_days"/>
+                            <field name="admin_fee_percent"/>
+                            <field name="company_id"/>
+                            <field name="active"/>
+                            <field name="notes"/>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -1,0 +1,322 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record id="view_demurrage_container_tree" model="ir.ui.view">
+            <field name="name">demurrage.container.tree</field>
+            <field name="model">demurrage.container</field>
+            <field name="arch" type="xml">
+                <tree string="Contenedores"
+                      decoration-danger="is_overdue"
+                      decoration-warning="is_due_soon"
+                      decoration-muted="state in ('invoiced','cancelled')">
+                    <field name="container_number"/>
+                    <field name="bl_id"/>
+                    <field name="partner_id"/>
+                    <field name="shipping_line_id"/>
+                    <field name="container_type_id"/>
+                    <field name="discharge_date"/>
+                    <field name="return_date"/>
+                    <field name="days_out"/>
+                    <field name="free_days"/>
+                    <field name="demurrage_days"/>
+                    <field name="carrier_charge_usd"/>
+                    <field name="customer_charge_usd"/>
+                    <field name="customer_charge_cop" optional="hide"/>
+                    <field name="due_date"/>
+                    <field name="is_estimate"/>
+                    <field name="state"/>
+                    <field name="is_overdue" invisible="1"/>
+                    <field name="is_due_soon" invisible="1"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="view_demurrage_container_form" model="ir.ui.view">
+            <field name="name">demurrage.container.form</field>
+            <field name="model">demurrage.container</field>
+            <field name="arch" type="xml">
+                <form string="Contenedor">
+                    <header>
+                        <field name="state" widget="statusbar"
+                               statusbar_visible="draft,open,returned,invoiced,cancelled"/>
+                        <button name="action_set_return_today" type="object"
+                                string="Devolver hoy" class="btn-primary"
+                                invisible="state != 'open'"/>
+                        <button name="action_refresh_estimate" type="object"
+                                string="Actualizar estimación"
+                                invisible="state != 'open'"/>
+                        <button name="action_open_mark_invoiced_wizard" type="object"
+                                string="Marcar facturado" class="btn-primary"
+                                invisible="state != 'returned'"
+                                groups="container_demurrage.group_demurrage_billing"/>
+                        <button name="action_open_reopen_wizard" type="object"
+                                string="Reabrir"
+                                invisible="state != 'invoiced'"
+                                groups="container_demurrage.group_demurrage_billing"/>
+                        <button name="action_open_correction_request_wizard" type="object"
+                                string="Solicitar corrección"
+                                invisible="state != 'invoiced'"/>
+                        <button name="action_open_cancel_wizard" type="object"
+                                string="Cancelar"
+                                invisible="state in ('cancelled','invoiced')"/>
+                    </header>
+                    <sheet>
+                        <group string="Identificación">
+                            <field name="container_number"/>
+                            <field name="bl_id"/>
+                            <field name="partner_id"/>
+                            <field name="shipping_line_id"/>
+                            <field name="container_type_id"/>
+                        </group>
+                        <group string="Fechas">
+                            <field name="discharge_date"/>
+                            <field name="return_date"/>
+                            <field name="as_of_date"/>
+                            <field name="due_date" readonly="1"/>
+                        </group>
+                        <group string="Cálculo">
+                            <field name="days_out"/>
+                            <field name="free_days"/>
+                            <field name="demurrage_days"/>
+                            <field name="is_estimate"/>
+                            <field name="is_due_soon"/>
+                            <field name="is_overdue"/>
+                        </group>
+                        <group string="Tarifa / Acuerdo">
+                            <field name="tariff_id"/>
+                            <field name="agreement_id"/>
+                            <field name="extra_free_days"/>
+                            <field name="admin_fee_percent"/>
+                            <field name="exchange_rate"/>
+                            <field name="exchange_rate_date"/>
+                        </group>
+                        <group string="Alertas">
+                            <field name="missing_tariff"/>
+                            <field name="missing_exchange_rate"/>
+                            <field name="missing_eir"/>
+                        </group>
+                        <group string="Montos">
+                            <field name="carrier_charge_usd"/>
+                            <field name="customer_charge_usd"/>
+                            <field name="customer_charge_cop"/>
+                        </group>
+                        <notebook>
+                            <page string="Desglose">
+                                <field name="tier_breakdown" readonly="1"/>
+                            </page>
+                            <page string="EIR">
+                                <field name="eir_attachment_ids" widget="many2many_binary"/>
+                                <field name="eir_count" readonly="1"/>
+                                <field name="missing_eir" readonly="1"/>
+                            </page>
+                            <page string="Facturación">
+                                <field name="invoice_reference" readonly="1"/>
+                                <field name="invoice_date" readonly="1"/>
+                                <field name="invoiced_at" readonly="1"/>
+                                <field name="invoice_needs_review"/>
+                                <field name="invoiced_carrier_usd" readonly="1"/>
+                                <field name="invoiced_customer_usd" readonly="1"/>
+                                <field name="invoiced_demurrage_days" readonly="1"/>
+                                <field name="invoiced_admin_fee_percent" readonly="1"/>
+                                <field name="invoiced_exchange_rate" readonly="1"/>
+                                <field name="invoiced_customer_cop" readonly="1"/>
+                            </page>
+                            <page string="Correcciones">
+                                <field name="correction_ids" readonly="1">
+                                    <tree>
+                                        <field name="date"/>
+                                        <field name="user_id"/>
+                                        <field name="reason"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Notas">
+                                <field name="notes"/>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_demurrage_container_search" model="ir.ui.view">
+            <field name="name">demurrage.container.search</field>
+            <field name="model">demurrage.container</field>
+            <field name="arch" type="xml">
+                <search string="Contenedores">
+                    <field name="container_number"/>
+                    <field name="bl_id"/>
+                    <field name="partner_id"/>
+                    <field name="shipping_line_id"/>
+                    <field name="container_type_id"/>
+                    <field name="state"/>
+                    <filter name="afuera" string="Afuera" domain="[('state','=','open')]"/>
+                    <filter name="due_soon" string="Por vencer en los próximos 2 días" domain="[('is_due_soon','=',True)]"/>
+                    <filter name="overdue" string="Vencidos y todavía afuera" domain="[('is_overdue','=',True)]"/>
+                    <filter name="returned_uninvoiced" string="Devueltos sin facturar" domain="[('state','=','returned')]"/>
+                    <filter name="missing_tariff" string="Sin tarifa" domain="[('missing_tariff','=',True)]"/>
+                    <filter name="missing_eir" string="Sin EIR" domain="[('missing_eir','=',True)]"/>
+                    <filter name="estimate" string="Estimados" domain="[('is_estimate','=',True)]"/>
+                    <filter name="invoiced" string="Facturados" domain="[('state','=','invoiced')]"/>
+                    <group expand="0" string="Agrupar por">
+                        <filter name="group_state" string="Estado" context="{'group_by':'state'}"/>
+                        <filter name="group_shipping_line" string="Naviera" context="{'group_by':'shipping_line_id'}"/>
+                        <filter name="group_partner" string="Cliente" context="{'group_by':'partner_id'}"/>
+                        <filter name="group_type" string="Tipo" context="{'group_by':'container_type_id'}"/>
+                    </group>
+                </search>
+            </field>
+        </record>
+
+        <record id="view_demurrage_container_kanban" model="ir.ui.view">
+            <field name="name">demurrage.container.kanban</field>
+            <field name="model">demurrage.container</field>
+            <field name="arch" type="xml">
+                <kanban default_group_by="state">
+                    <field name="container_number"/>
+                    <field name="state"/>
+                    <field name="partner_id"/>
+                    <field name="shipping_line_id"/>
+                    <field name="due_date"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div class="oe_kanban_global_click">
+                                <div class="oe_kanban_details">
+                                    <strong><field name="container_number"/></strong>
+                                    <div><field name="partner_id"/></div>
+                                    <div><field name="shipping_line_id"/></div>
+                                    <div><field name="due_date"/></div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+        </record>
+
+        <record id="view_demurrage_container_pivot" model="ir.ui.view">
+            <field name="name">demurrage.container.pivot</field>
+            <field name="model">demurrage.container</field>
+            <field name="arch" type="xml">
+                <pivot string="Demoras">
+                    <field name="state" type="col"/>
+                    <field name="shipping_line_id" type="row"/>
+                    <field name="carrier_charge_usd" type="measure"/>
+                    <field name="customer_charge_usd" type="measure"/>
+                    <field name="demurrage_days" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="view_demurrage_container_graph" model="ir.ui.view">
+            <field name="name">demurrage.container.graph</field>
+            <field name="model">demurrage.container</field>
+            <field name="arch" type="xml">
+                <graph string="Demoras" type="bar">
+                    <field name="state" type="col"/>
+                    <field name="shipping_line_id" type="row"/>
+                    <field name="carrier_charge_usd" type="measure"/>
+                    <field name="customer_charge_usd" type="measure"/>
+                    <field name="demurrage_days" type="measure"/>
+                </graph>
+            </field>
+        </record>
+
+
+    <!-- Actions -->
+    <record id="action_demurrage_container" model="ir.actions.act_window">
+        <field name="name">Contenedores</field>
+        <field name="res_model">demurrage.container</field>
+        <field name="view_mode">tree,form,kanban,pivot,graph</field>
+    </record>
+    <record id="action_demurrage_container_due_soon" model="ir.actions.act_window">
+        <field name="name">Por vencer</field>
+        <field name="res_model">demurrage.container</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_due_soon','=',True)]</field>
+    </record>
+    <record id="action_demurrage_container_overdue" model="ir.actions.act_window">
+        <field name="name">Vencidos</field>
+        <field name="res_model">demurrage.container</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('is_overdue','=',True)]</field>
+    </record>
+    <record id="action_demurrage_container_returned" model="ir.actions.act_window">
+        <field name="name">Devueltos sin facturar</field>
+        <field name="res_model">demurrage.container</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">[('state','=','returned')]</field>
+    </record>
+    <record id="action_demurrage_bl" model="ir.actions.act_window">
+        <field name="name">BLs</field>
+        <field name="res_model">demurrage.bl</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_demurrage_tariff" model="ir.actions.act_window">
+        <field name="name">Tarifas</field>
+        <field name="res_model">demurrage.tariff</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_demurrage_customer_agreement" model="ir.actions.act_window">
+        <field name="name">Acuerdos</field>
+        <field name="res_model">demurrage.customer.agreement</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_demurrage_shipping_line" model="ir.actions.act_window">
+        <field name="name">Navieras</field>
+        <field name="res_model">demurrage.shipping.line</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_demurrage_container_type" model="ir.actions.act_window">
+        <field name="name">Tipos de contenedor</field>
+        <field name="res_model">demurrage.container.type</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+    <record id="action_demurrage_container_pivot" model="ir.actions.act_window">
+        <field name="name">Demoras (Pivote)</field>
+        <field name="res_model">demurrage.container</field>
+        <field name="view_mode">pivot</field>
+    </record>
+    <record id="action_demurrage_container_graph" model="ir.actions.act_window">
+        <field name="name">Demoras (Gráfica)</field>
+        <field name="res_model">demurrage.container</field>
+        <field name="view_mode">graph</field>
+    </record>
+
+    <record id="action_demurrage_config_settings" model="ir.actions.act_window">
+        <field name="name">Ajustes</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module': 'container_demurrage'}</field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_demurrage_root" name="Demoras" sequence="80"/>
+
+    <menuitem id="menu_demurrage_operation" name="Operación" parent="menu_demurrage_root" sequence="10"/>
+    <menuitem id="menu_demurrage_containers" name="Contenedores" parent="menu_demurrage_operation" action="action_demurrage_container" sequence="10"/>
+    <menuitem id="menu_demurrage_due_soon" name="Por vencer" parent="menu_demurrage_operation" action="action_demurrage_container_due_soon" sequence="20"/>
+    <menuitem id="menu_demurrage_overdue" name="Vencidos" parent="menu_demurrage_operation" action="action_demurrage_container_overdue" sequence="30"/>
+    <menuitem id="menu_demurrage_returned" name="Devueltos sin facturar" parent="menu_demurrage_operation" action="action_demurrage_container_returned" sequence="40"/>
+    <menuitem id="menu_demurrage_bls" name="BLs" parent="menu_demurrage_operation" action="action_demurrage_bl" sequence="50"/>
+
+    <menuitem id="menu_demurrage_config" name="Configuración" parent="menu_demurrage_root" sequence="20" groups="container_demurrage.group_demurrage_billing"/>
+    <menuitem id="menu_demurrage_shipping_lines" name="Navieras" parent="menu_demurrage_config" action="action_demurrage_shipping_line" sequence="10"/>
+    <menuitem id="menu_demurrage_container_types" name="Tipos" parent="menu_demurrage_config" action="action_demurrage_container_type" sequence="20"/>
+    <menuitem id="menu_demurrage_tariffs" name="Tarifas" parent="menu_demurrage_config" action="action_demurrage_tariff" sequence="30"/>
+    <menuitem id="menu_demurrage_agreements" name="Acuerdos" parent="menu_demurrage_config" action="action_demurrage_customer_agreement" sequence="40"/>
+    <menuitem id="menu_demurrage_settings" name="Ajustes" parent="menu_demurrage_config" action="action_demurrage_config_settings" sequence="50"/>
+
+    <menuitem id="menu_demurrage_analysis" name="Análisis" parent="menu_demurrage_root" sequence="30"/>
+    <menuitem id="menu_demurrage_pivot" name="Demoras" parent="menu_demurrage_analysis" action="action_demurrage_container_pivot" sequence="10"/>
+    <menuitem id="menu_demurrage_graph" name="Gráfica" parent="menu_demurrage_analysis" action="action_demurrage_container_graph" sequence="20"/>
+
+    </data>
+</odoo>

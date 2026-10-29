@@ -12,6 +12,11 @@
         "security/demurrage_security.xml",
         "security/ir.model.access.csv",
         "views/demurrage_state_wizard_views.xml",
+        "views/demurrage_container_views.xml",
+        "views/demurrage_bl_views.xml",
+        "views/demurrage_catalog_views.xml",
+        "views/res_partner_views.xml",
+        "views/res_config_settings_views.xml",
     ],
     "demo": [],
 }

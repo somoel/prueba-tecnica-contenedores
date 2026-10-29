@@ -58,6 +58,8 @@ class DemurrageContainer(models.Model):
          ("cancelled", "Cancelado")],
         compute="_compute_state", store=True)
     notes = fields.Text()
+    correction_ids = fields.One2many(
+        "demurrage.correction", "container_id", string="Correcciones")
     active = fields.Boolean(default=True)
 
     eir_attachment_ids = fields.Many2many(
