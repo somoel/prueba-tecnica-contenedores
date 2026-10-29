@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_demurrage_service" model="product.product">
+        <field name="name">Demora de contenedor</field>
+        <field name="detailed_type">service</field>
+        <field name="invoice_policy">order</field>
+        <field name="list_price">0</field>
+    </record>
+</odoo>

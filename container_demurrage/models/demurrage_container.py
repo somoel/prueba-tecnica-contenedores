@@ -52,6 +52,8 @@ class DemurrageContainer(models.Model):
     invoiced_exchange_rate = fields.Float(readonly=True, copy=False)
     invoiced_customer_cop = fields.Monetary(
         readonly=True, copy=False, currency_field="cop_currency_id")
+    invoice_id = fields.Many2one(
+        "account.move", readonly=True, copy=False)
     invoice_needs_review = fields.Boolean(default=False, copy=False)
     state = fields.Selection(
         [("draft", "Borrador"), ("open", "Abierto"),
@@ -408,6 +410,46 @@ class DemurrageContainer(models.Model):
         ]
         return self.env["demurrage.customer.agreement"].search(domain, limit=1)
 
+    def _refresh_invoice_snapshot(self, invoice_date):
+        self.ensure_one()
+        if not invoice_date:
+            raise UserError("Debe indicar la fecha de la factura.")
+        rate_result = self._get_exchange_rate(invoice_date)
+        if isinstance(rate_result, tuple):
+            exchange_rate, found = rate_result
+        else:
+            exchange_rate, found = rate_result, True
+        if not found or not exchange_rate:
+            raise UserError("Falta tasa de cambio.")
+        usd = self.invoiced_customer_usd or 0.0
+        cop_amount = round(usd * exchange_rate, 2) if usd else 0.0
+        self.with_context(demurrage_transition=True).write({
+            "invoice_date": invoice_date,
+            "invoiced_exchange_rate": exchange_rate,
+            "invoiced_customer_cop": cop_amount,
+        })
+        return True
+
+    def _get_breakdown(self):
+        self.ensure_one()
+        if self.missing_tariff or not self.tariff_id:
+            return []
+        from odoo.addons.container_demurrage.utils.calculator import calculate, Tier
+        from decimal import Decimal
+        tiers = []
+        for t in self.tariff_id.tier_ids:
+            day_to = t.day_to if t.day_to not in (0, False) else None
+            tiers.append(Tier(t.day_from, day_to, Decimal(str(t.rate_per_day))))
+        free_days = self.free_days or 0
+        admin_percent = self.admin_fee_percent or 0.0
+        days_out = self.days_out or 0
+        calc = calculate(days_out, free_days, tiers, Decimal(str(admin_percent)))
+        return [
+            {"label": ln.label, "days": ln.days,
+             "rate": float(ln.rate), "subtotal": float(ln.subtotal)}
+            for ln in calc.lines
+        ]
+
     def write(self, vals):
         sensitive = {"container_number", "bl_id", "container_type_id",
                      "discharge_date", "return_date"}
@@ -426,7 +468,7 @@ class DemurrageContainer(models.Model):
 
     def action_mark_invoiced(self, invoice_reference=None, invoice_date=None):
         self.ensure_one()
-        if not self.env.user.has_group(
+        if not self.env.is_superuser() and not self.env.user.has_group(
                 "container_demurrage.group_demurrage_billing"):
             raise AccessError("No tiene permisos para facturar.")
         if self.state != "returned" or not self.return_date:

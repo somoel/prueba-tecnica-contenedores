@@ -7,7 +7,7 @@
     "license": "LGPL-3",
     "application": True,
     "installable": True,
-    "depends": ["base", "mail", "base_setup", "account"],
+    "depends": ["base", "mail", "base_setup", "account", "sale"],
     "data": [
         "security/demurrage_security.xml",
         "security/ir.model.access.csv",
@@ -19,7 +19,9 @@
         "views/demurrage_catalog_views.xml",
         "views/res_partner_views.xml",
         "views/res_config_settings_views.xml",
+        "views/demurrage_invoice_views.xml",
         "data/ir_cron.xml",
+        "data/product.xml",
     ],
     "demo": [],
 }

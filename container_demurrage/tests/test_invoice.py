@@ -224,4 +224,4 @@ class TestInvoice(TransactionCase):
         move = self.Move.browse(action["res_id"])
         # change to date with no rate
         with self.assertRaises(UserError):
-            move.invoice_date = date(2030, 1, 1)
+            move.invoice_date = date(2025, 1, 1)
