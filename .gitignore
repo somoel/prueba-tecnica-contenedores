@@ -1,0 +1,12 @@
+.venv/
+.odoo/
+.pgdata/
+__pycache__/
+*.pyc
+*.pyo
+*.log
+*.zip
+.env
+.DS_Store
+htmlcov/
+.coverage
