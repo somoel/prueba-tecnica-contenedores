@@ -160,7 +160,8 @@ class TestExtendedCases(TransactionCase):
         self.assertEqual(c.demurrage_days, 1)
         self.assertEqual(c.carrier_charge_usd, 35)
         self.assertEqual(c.customer_charge_usd, 38.50)
-        self.assertEqual(c.calculation_status, "missing_rate")
+        self.assertTrue(c.missing_exchange_rate)
+        self.assertEqual(c.calculation_status, "ok")
 
     def test_case_8(self):
         c = self.c8
@@ -228,4 +229,4 @@ class TestExtendedCases(TransactionCase):
         # avoid duplicate container number by using a different valid number
         self.assertTrue(c.missing_exchange_rate)
         self.assertEqual(c.customer_charge_cop, 0)
-        self.assertEqual(c.calculation_status, "missing_rate")
+        self.assertEqual(c.calculation_status, "ok")

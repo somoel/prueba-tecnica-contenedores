@@ -246,12 +246,7 @@ class DemurrageContainer(models.Model):
                 record.exchange_rate = 0.0
                 record.missing_exchange_rate = bool(record.customer_charge_usd)
                 record.customer_charge_cop = 0.0
-                if record.customer_charge_usd:
-                    record.missing_exchange_rate = True
-                    record.calculation_status = "missing_rate"
-                else:
-                    record.missing_exchange_rate = False
-                    record.calculation_status = "ok"
+                record.calculation_status = "ok"
             else:
                 record.exchange_rate = exchange_rate
                 record.missing_exchange_rate = False
