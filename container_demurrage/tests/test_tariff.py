@@ -101,11 +101,14 @@ class TestTariff(TransactionCase):
             ]))
 
     def test_duplicate_day_from_raises(self):
-        with self.assertRaises((IntegrityError, ValidationError)):
+        try:
             self.Tariff.create(self._tariff_vals(tier_ids=[
                 (0, 0, {"day_from": 1, "day_to": 5, "rate_per_day": 10}),
                 (0, 0, {"day_from": 1, "day_to": 0, "rate_per_day": 20}),
             ]))
+        except (IntegrityError, ValidationError):
+            return
+        self.fail("Se esperaba IntegrityError o ValidationError")
 
     def test_negative_free_days_raises(self):
         with self.assertRaises(ValidationError):
