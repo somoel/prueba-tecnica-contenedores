@@ -11,3 +11,4 @@ from . import test_security
 from . import test_states
 from . import test_eir
 from . import test_state_wizards
+from . import test_views
