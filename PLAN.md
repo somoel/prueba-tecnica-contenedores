@@ -166,63 +166,64 @@ Leyenda: `[ ]` pendiente, `[~]` en curso, `[x]` hecho.
 
 | ID | Tarea | Prueba | Estado | Commit |
 |---|---|---|---|---|
-| F0.1 | Repositorio, `.gitignore`, licencia, `PLAN.md` | — | [x] | `4f845e8` |
-| F0.2 | Scripts de entorno `pg.py`, `run_odoo.sh`, `run_tests.sh` | Arranque local | [x] | `077e80d`, `d048642` |
-| F0.3 | Esqueleto del módulo | Instalación vacía | [x] | `cf24203` |
-| F0.4 | Workflow CI | Workflow creado; pendiente primer run | [x] | `855ce63` |
-| F1.1 | Tipos de contenedor | `test_container_type.py` | [ ] | |
-| F1.2 | Navieras | `test_shipping_line.py` | [ ] | |
-| F1.3 | Tarifas y vigencia | `test_tariff.py` | [ ] | |
-| F1.4 | Tramos y continuidad | `test_tariff_tiers.py` | [ ] | |
-| F1.5 | Solapamiento de tarifas | `test_tariff_overlap.py` | [ ] | |
-| F1.6 | Acuerdos cliente/naviera | `test_agreement.py` | [ ] | |
-| F1.7 | Grupos y ACL | `test_security.py` | [ ] | |
-| F2.1 | BL y unicidad | `test_bl.py` | [ ] | |
-| F2.2 | Contenedor base | `test_container.py` | [ ] | |
-| F2.3 | ISO 6346 | `test_iso6346.py` | [ ] | |
-| F2.4 | Validación de fechas | `test_container_dates.py` | [ ] | |
-| F2.5 | Solapamiento de periodos | `test_container_overlap.py` | [ ] | |
-| F2.6 | Fecha de BL y override | `test_bl_dates.py` | [ ] | |
-| F2.7 | Resolución de tarifa | `test_tariff_resolution.py` | [ ] | |
-| F2.8 | Resolución de acuerdo | `test_agreement_resolution.py` | [ ] | |
-| F3.1 | Días y demora | `test_dates.py` | [ ] | |
-| F3.2 | Cálculo por tramos | `test_calculator.py` | [ ] | |
-| F3.3 | Nueve casos | `test_acceptance_cases.py` | [ ] | |
-| F3.4 | Estimado `as_of_date` | `test_estimate.py` | [ ] | |
-| F3.5 | Vencimiento y filtros base | `test_due.py` | [ ] | |
-| F3.6 | COP/TRM | `test_currency.py` | [ ] | |
-| F4.1 | Estado calculado | `test_state.py` | [ ] | |
-| F4.2 | Bloqueo posfactura | `test_invoice_lock.py` | [ ] | |
-| F4.3 | Reapertura auditada | `test_reopen.py` | [ ] | |
-| F4.4 | Cancelación | `test_cancel.py` | [ ] | |
-| F4.5 | EIR | `test_eir.py` | [ ] | |
-| F5.1 | Vistas de contenedores y filtros | `test_filters.py` | [ ] | |
-| F5.2 | Vista de BL y onchange | `test_bl_form.py` | [ ] | |
-| F5.3 | Vistas de tarifas/acuerdos/partner | Smoke | [ ] | |
-| F5.4 | Menús y accesos | Manual/ACL | [ ] | |
-| F5.5 | Kanban, pivote, gráfica | Smoke | [ ] | |
-| F6.1 | Cron `as_of_date` | `test_cron.py` | [ ] | |
-| F6.2 | Actividades idempotentes | `test_cron.py` | [ ] | |
-| F6.3 | Parseo de Excel | `test_parsing.py` | [ ] | |
-| F6.4 | Asistente: analizar | `test_import_analyze.py` | [ ] | |
-| F6.5 | Asistente: importar 6/4 | `test_import.py` | [ ] | |
-| F6.6 | Importación idempotente | `test_import.py` | [ ] | |
-| F7.1 | Factura naviera | `test_carrier_invoice.py` | [ ] | |
-| F7.2 | Varianza y sobrecobro | `test_carrier_variance.py` | [ ] | |
-| F8.1 | Producto de servicio | `test_invoice.py` | [ ] | |
-| F8.2 | Asistente de factura | `test_invoice.py` | [ ] | |
-| F8.3 | Líneas por contenedor y COP | `test_invoice.py` | [ ] | |
-| F8.4 | Snapshot y bloqueo | `test_invoice_snapshot.py` | [ ] | |
-| F8.5 | Fecha de factura en borrador | `test_invoice_date.py` | [ ] | |
-| F9.1 | Liquidación PDF/HTML | `test_report_settlement.py` | [ ] | |
-| F9.2 | Reporte mensual | `test_monthly_report.py` | [ ] | |
-| F10.1 | Demo data | Instalación con demo | [ ] | |
-| F10.2 | README instalación/pruebas | Manual | [ ] | |
-| F10.3 | README modelo/decisiones | Manual | [ ] | |
-| F10.4 | README Excel/casos/preguntas | Manual | [ ] | |
-| F10.5 | README limitaciones/guion | Manual | [ ] | |
-| F10.6 | `docs/tdd.md` | Manual | [ ] | |
-| F10.7 | Instalación limpia y simulación evaluador | Script | [ ] | |
+| F0.1 | Repositorio, `.gitignore`, licencia, `PLAN.md` | — | [x] | 4f845e8 |
+| F0.2 | Scripts de entorno `pg.py`, `run_odoo.sh`, `run_tests.sh` | Arranque local | [x] | 077e80d, d048642 |
+| F0.3 | Esqueleto del módulo | Instalación vacía | [x] | cf24203 |
+| F0.4 | Workflow CI | Workflow creado; pendiente primer run | [x] | 855ce63, 30ffb9f |
+| F1.1 | Tipos de contenedor | `test_container_type.py` | [x] | 2bb1c28/1ba5d3e |
+| F1.2 | Navieras | `test_shipping_line.py` | [x] | 2bb1c28/1ba5d3e |
+| F1.3 | Tarifas y vigencia | `test_tariff.py` | [x] | 348c832/f695c61 |
+| F1.4 | Tramos y continuidad | `test_tariff_tiers.py` | [x] | 348c832/f695c61 |
+| F1.5 | Solapamiento de tarifas | `test_tariff_overlap.py` | [x] | 348c832/f695c61 |
+| F1.6 | Acuerdos cliente/naviera | `test_agreement.py` | [x] | 3e69a3f/3ac60bf |
+| F1.7 | Grupos y ACL | `test_security.py` | [x] | 30b85b5/32d178f |
+| F2.1 | BL y unicidad | `test_bl.py` | [x] | 6de150f/1fc6f2a |
+| F2.2 | Contenedor base | `test_container.py` | [x] | 6de150f/1fc6f2a |
+| F2.3 | ISO 6346 | `test_iso6346.py` | [x] | 6aece53/dad3472 |
+| F2.4 | Validación de fechas | `test_container_dates.py` | [x] | 06728a3/c50623e |
+| F2.5 | Solapamiento de periodos | `test_container_overlap.py` | [x] | 06728a3/c50623e |
+| F2.6 | Fecha de BL y override | `test_bl_dates.py` | [x] | 6de150f/1fc6f2a |
+| F2.7 | Resolución de tarifa | `test_tariff_resolution.py` | [x] | 1df9fc2 |
+| F2.8 | Resolución de acuerdo | `test_agreement_resolution.py` | [x] | 1df9fc2 |
+| F3.1 | Días y demora | `test_dates.py` | [x] | b3a9265/ea57f5e |
+| F3.2 | Cálculo por tramos | `test_calculator.py` | [x] | b3a9265/ea57f5e |
+| F3.3 | Nueve casos | `test_acceptance_cases.py` | [x] | e2cc906/1df9fc2, 071bf31/872aaef |
+| F3.4 | Estimado `as_of_date` | `test_estimate.py` | [x] | 071bf31/872aaef |
+| F3.5 | Vencimiento y filtros base | `test_due.py` | [x] | 071bf31/872aaef |
+| F3.6 | COP/TRM | `test_currency.py` | [x] | 071bf31/872aaef, 3647551 |
+| F4.1 | Estado calculado | `test_state.py` | [x] | bf59b16/7c6247d |
+| F4.2 | Bloqueo posfactura | `test_invoice_lock.py` | [x] | bf59b16/7c6247d |
+| F4.3 | Reapertura auditada | `test_reopen.py` | [x] | bf59b16/7c6247d |
+| F4.4 | Cancelación | `test_cancel.py` | [x] | bf59b16/7c6247d |
+| F4.5 | EIR | `test_eir.py` | [x] | 8848eb3/d663ac5 |
+| F5.0 | Asistentes de estado | `test_state_wizards.py` | [x] | `1687681`/`b1570e1` |
+| F5.1 | Vistas de contenedores y filtros | `test_filters.py` | [x] | 4131a02/8de5f0f |
+| F5.2 | Vista de BL y onchange | `test_bl_form.py` | [x] | 4131a02/8de5f0f |
+| F5.3 | Vistas de tarifas/acuerdos/partner | Smoke | [x] | 4131a02/8de5f0f |
+| F5.4 | Menús y accesos | Manual/ACL | [x] | 4131a02/8de5f0f |
+| F5.5 | Kanban, pivote, gráfica | Smoke | [x] | 4131a02/8de5f0f |
+| F6.1 | Cron `as_of_date` | `test_cron.py` | [x] | 4515f6e/ba77a74 |
+| F6.2 | Actividades idempotentes | `test_cron.py` | [x] | 4515f6e/ba77a74 |
+| F6.3 | Parseo de Excel | `test_parsing.py` | [x] | 4933f5e/20415e5 |
+| F6.4 | Asistente: analizar | `test_import_analyze.py` | [x] | 7a50247/0bd4b76 |
+| F6.5 | Asistente: importar 6/4 | `test_import.py` | [x] | 7a50247/0bd4b76 |
+| F6.6 | Importación idempotente | `test_import.py` | [x] | 7a50247/0bd4b76 |
+| F7.1 | Factura naviera | `test_carrier_invoice.py` | [x] | 451bde1/fe7c4f6 |
+| F7.2 | Varianza y sobrecobro | `test_carrier_variance.py` | [x] | 451bde1/fe7c4f6 |
+| F8.1 | Producto de servicio | `test_invoice.py` | [x] | 2f86e04/d82421c |
+| F8.2 | Asistente de factura | `test_invoice.py` | [x] | 2f86e04/d82421c |
+| F8.3 | Líneas por contenedor y COP | `test_invoice.py` | [x] | 2f86e04/d82421c |
+| F8.4 | Snapshot y bloqueo | `test_invoice_snapshot.py` | [x] | 2f86e04/d82421c |
+| F8.5 | Fecha de factura en borrador | `test_invoice_date.py` | [x] | 2f86e04/d82421c |
+| F9.1 | Liquidación PDF/HTML | `test_report_settlement.py` | [x] | ab6bb54/6f96f97 |
+| F9.2 | Reporte mensual | `test_monthly_report.py` | [x] | ab6bb54/6f96f97 |
+| F10.1 | Demo data | Instalación con demo | [x] | 3d56468 |
+| F10.2 | README instalación/pruebas | Manual | [x] | documentación/verificación |
+| F10.3 | README modelo/decisiones | Manual | [x] | documentación/verificación |
+| F10.4 | README Excel/casos/preguntas | Manual | [x] | documentación/verificación |
+| F10.5 | README limitaciones/guion | Manual | [x] | documentación/verificación |
+| F10.6 | `docs/tdd.md` | Manual | [x] | documentación/verificación |
+| F10.7 | Instalación limpia y simulación evaluador | Script | [x] | documentación/verificación |
 | F10.8 | Release `v1.0.0` | GitHub | [ ] | |
 
 ---
@@ -286,3 +287,7 @@ Se actualiza al cerrar cada tarea.
 | 2026-10-29 | Prueba de Beam | `BEAM_OK`; subagente disponible | — |
 | 2026-10-29 | Plan y trazabilidad | `PLAN.md` creado | `4f845e8` |
 | 2026-10-29 | Entorno y esqueleto | Odoo 17 + PostgreSQL + scripts + CI | `077e80d`, `d048642`, `cf24203`, `855ce63` |
+| 2026-10-29 | Catálogos y cálculo | 197 pruebas verdes; casos 1–9 | `1ba5d3e` … `872aaef` |
+| 2026-10-29 | Estados, seguridad, vistas | Bloqueo, reapertura, EIR, filtros | `32d178f` … `8de5f0f` |
+| 2026-10-29 | Deseables y extras | Importación 6/4, cron, conciliación, COP, factura, reportes | `20415e5` … `6f96f97` |
+| 2026-10-29 | Demo y documentación | Datos demo, README, TDD, endurecimiento | `3d56468`, `295a225`, `6497e8c`, `d743c87` |
