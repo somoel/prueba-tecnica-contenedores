@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from . import test_catalog
 from . import test_tariff
 from . import test_agreement
@@ -9,3 +8,4 @@ from . import test_calculator
 from . import test_acceptance_cases
 from . import test_extended_cases
 from . import test_security
+from . import test_states
