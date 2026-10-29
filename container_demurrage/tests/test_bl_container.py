@@ -37,7 +37,7 @@ class TestBLContainer(TransactionCase):
 
     def _container_vals(self, bl, **kwargs):
         vals = {
-            "container_number": "MSCU1234567",
+            "container_number": "CSQU3054383",
             "bl_id": bl.id,
             "container_type_id": self.ctype.id,
         }
@@ -75,8 +75,8 @@ class TestBLContainer(TransactionCase):
         bl = self.BL.create(self._bl_vals(discharge_date=date(2026, 1, 10)))
         container = self.Container.create(self._container_vals(bl))
         self.assertTrue(container.id)
-        self.assertEqual(container.name, "MSCU1234567")
-        self.assertEqual(container.display_name, "MSCU1234567 (BL001)")
+        self.assertEqual(container.name, "CSQU3054383")
+        self.assertEqual(container.display_name, "CSQU3054383 (BL001)")
         self.assertEqual(container.shipping_line_id, self.line)
         self.assertEqual(container.partner_id, self.partner)
         self.assertEqual(container.company_id, self.env.company)
@@ -96,9 +96,9 @@ class TestBLContainer(TransactionCase):
     def test_container_count_and_mixed_dates(self):
         bl = self.BL.create(self._bl_vals())
         self.Container.create(self._container_vals(
-            bl, container_number="MSCU1111111", discharge_date=date(2026, 1, 10)))
+            bl, container_number="NATU4120783", discharge_date=date(2026, 1, 10)))
         self.Container.create(self._container_vals(
-            bl, container_number="MSCU2222222", discharge_date=date(2026, 1, 10)))
+            bl, container_number="MSLU2209456", discharge_date=date(2026, 1, 10)))
         bl.invalidate_recordset()
         self.assertEqual(bl.container_count, 2)
         self.assertFalse(bl.has_mixed_discharge_dates)
@@ -106,9 +106,9 @@ class TestBLContainer(TransactionCase):
         bl2 = self.BL.create({"name": "BL002", "shipping_line_id": self.line.id,
                               "partner_id": self.partner.id})
         self.Container.create(self._container_vals(
-            bl2, container_number="MSCU3333333", discharge_date=date(2026, 1, 10)))
+            bl2, container_number="NATU7713041", discharge_date=date(2026, 1, 10)))
         self.Container.create(self._container_vals(
-            bl2, container_number="MSCU4444444", discharge_date=date(2026, 2, 2)))
+            bl2, container_number="MSLU6135876", discharge_date=date(2026, 2, 2)))
         bl2.invalidate_recordset()
         self.assertTrue(bl2.has_mixed_discharge_dates)
 
@@ -150,9 +150,9 @@ class TestBLContainer(TransactionCase):
     def test_onchange_and_action_fill_empty_only(self):
         bl = self.BL.create(self._bl_vals())
         c1 = self.Container.create(self._container_vals(
-            bl, container_number="MSCU1111111"))
+            bl, container_number="NATU3002195"))
         c2 = self.Container.create(self._container_vals(
-            bl, container_number="MSCU2222222", discharge_date=date(2026, 5, 5)))
+            bl, container_number="MSLU1458705", discharge_date=date(2026, 5, 5)))
         # onchange
         bl.discharge_date = date(2026, 3, 3)
         bl._onchange_discharge_date()
@@ -164,7 +164,7 @@ class TestBLContainer(TransactionCase):
         # action
         bl.discharge_date = False
         c3 = self.Container.create(self._container_vals(
-            bl, container_number="MSCU3333333"))
+            bl, container_number="NATU6625310"))
         bl.discharge_date = date(2026, 4, 4)
         bl.action_apply_discharge_date()
         c1.invalidate_recordset()
