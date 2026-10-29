@@ -86,7 +86,7 @@ class TestStates(TransactionCase):
 
     def test_ops_cannot_mark_invoiced(self):
         c = self.container.with_user(self.ops_user)
-        with self.assertRaises((AccessError, UserError)):
+        with self.assertRaises(AccessError):
             c.action_mark_invoiced()
 
     def test_reopen_requires_reason(self):

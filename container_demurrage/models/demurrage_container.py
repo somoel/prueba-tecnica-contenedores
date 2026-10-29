@@ -2,7 +2,7 @@
 from datetime import date, timedelta
 
 from odoo import models, fields, api
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError, AccessError
 from odoo.addons.container_demurrage.utils.iso6346 import (
     normalize_container_number, validate_container_number)
 from odoo.addons.container_demurrage.utils.dates import days_between, last_free_day
@@ -12,6 +12,7 @@ from decimal import Decimal
 
 class DemurrageContainer(models.Model):
     _name = "demurrage.container"
+    _inherit = ["mail.thread", "mail.activity.mixin"]
     _description = "Contenedor"
     _order = "container_number"
 
@@ -38,6 +39,19 @@ class DemurrageContainer(models.Model):
     as_of_date = fields.Date(default=lambda self: fields.Date.today())
     invoiced = fields.Boolean(default=False, copy=False)
     cancelled = fields.Boolean(default=False, copy=False)
+    invoice_reference = fields.Char(readonly=True, copy=False)
+    invoice_date = fields.Date(readonly=True, copy=False)
+    invoiced_at = fields.Datetime(readonly=True, copy=False)
+    invoiced_carrier_usd = fields.Monetary(
+        readonly=True, copy=False, currency_field="currency_id")
+    invoiced_customer_usd = fields.Monetary(
+        readonly=True, copy=False, currency_field="currency_id")
+    invoiced_demurrage_days = fields.Integer(readonly=True, copy=False)
+    invoiced_admin_fee_percent = fields.Float(readonly=True, copy=False)
+    invoiced_exchange_rate = fields.Float(readonly=True, copy=False)
+    invoiced_customer_cop = fields.Monetary(
+        readonly=True, copy=False, currency_field="cop_currency_id")
+    invoice_needs_review = fields.Boolean(default=False, copy=False)
     state = fields.Selection(
         [("draft", "Borrador"), ("open", "Abierto"),
          ("returned", "Devuelto"), ("invoiced", "Facturado"),
@@ -182,6 +196,19 @@ class DemurrageContainer(models.Model):
             if not record.discharge_date:
                 continue
 
+            if record.invoiced and record.invoiced_at:
+                record.demurrage_days = record.invoiced_demurrage_days
+                record.admin_fee_percent = record.invoiced_admin_fee_percent
+                record.carrier_charge_usd = record.invoiced_carrier_usd
+                record.customer_charge_usd = record.invoiced_customer_usd
+                record.exchange_rate = record.invoiced_exchange_rate
+                record.customer_charge_cop = record.invoiced_customer_cop
+                record.calculation_status = "ok"
+                record.is_estimate = False
+                record.missing_tariff = False
+                record.missing_exchange_rate = False
+                continue
+
             cutoff = record.return_date or record.as_of_date or fields.Date.today()
             if cutoff < record.discharge_date:
                 days_out = 0
@@ -324,6 +351,113 @@ class DemurrageContainer(models.Model):
             ("active", "=", True),
         ]
         return self.env["demurrage.customer.agreement"].search(domain, limit=1)
+
+    def write(self, vals):
+        sensitive = {"container_number", "bl_id", "container_type_id",
+                     "discharge_date", "return_date"}
+        if sensitive & set(vals):
+            for rec in self:
+                if rec.invoiced and not self.env.context.get("demurrage_reopen"):
+                    raise UserError(
+                        "Reabra la facturación antes de modificar fechas o datos del contenedor.")
+        if "invoiced" in vals or "cancelled" in vals:
+            if not self.env.context.get("demurrage_transition"):
+                raise UserError(
+                    "No se puede modificar el estado de facturación directamente.")
+        return super().write(vals)
+
+    def action_mark_invoiced(self, invoice_reference=None, invoice_date=None):
+        self.ensure_one()
+        if not self.env.user.has_group(
+                "container_demurrage.group_demurrage_billing"):
+            raise AccessError("No tiene permisos para facturar.")
+        if self.state != "returned" or not self.return_date:
+            raise UserError("El contenedor debe estar devuelto para facturar.")
+        if self.missing_tariff or not self.tariff_id:
+            raise UserError("Falta tarifa.")
+        if self.missing_exchange_rate:
+            raise UserError("Falta tasa de cambio.")
+        if invoice_reference is None:
+            invoice_reference = "Facturación manual"
+        if invoice_date is None:
+            invoice_date = fields.Date.context_today(self)
+        rate_result = self._get_exchange_rate(invoice_date)
+        if isinstance(rate_result, tuple):
+            exchange_rate, found = rate_result
+        else:
+            exchange_rate, found = rate_result, True
+        if not found or exchange_rate is None:
+            raise UserError("Falta tasa de cambio.")
+        cop_amount = round(self.customer_charge_usd * exchange_rate, 2) if self.customer_charge_usd else 0.0
+        self.with_context(demurrage_transition=True).write({
+            "invoiced": True,
+            "invoice_reference": invoice_reference,
+            "invoice_date": invoice_date,
+            "invoiced_at": fields.Datetime.now(),
+            "invoiced_carrier_usd": self.carrier_charge_usd,
+            "invoiced_customer_usd": self.customer_charge_usd,
+            "invoiced_demurrage_days": self.demurrage_days,
+            "invoiced_admin_fee_percent": self.admin_fee_percent,
+            "invoiced_exchange_rate": exchange_rate,
+            "invoiced_customer_cop": cop_amount,
+        })
+        return True
+
+    def action_reopen(self, reason):
+        self.ensure_one()
+        if not self.env.user.has_group(
+                "container_demurrage.group_demurrage_billing"):
+            raise AccessError("No tiene permisos para reabrir.")
+        if self.state != "invoiced":
+            raise UserError("Solo se puede reabrir un contenedor facturado.")
+        if not reason or not str(reason).strip():
+            raise UserError("Debe indicar un motivo.")
+        self.env["demurrage.correction"].create({
+            "container_id": self.id,
+            "reason": reason,
+            "old_discharge_date": self.discharge_date,
+            "old_return_date": self.return_date,
+            "old_state": self.state,
+        })
+        self.with_context(demurrage_transition=True).write({
+            "invoiced": False,
+            "invoice_needs_review": True,
+        })
+        self.message_post(body=reason)
+        return True
+
+    def action_cancel(self, reason=None):
+        self.ensure_one()
+        if self.invoiced or self.state == "invoiced":
+            raise UserError("No se puede cancelar un contenedor facturado.")
+        self.with_context(demurrage_transition=True).write({"cancelled": True})
+        self.message_post(body=reason or "Cancelado")
+        return True
+
+    def action_set_return_today(self):
+        self.ensure_one()
+        if not self.discharge_date:
+            raise UserError("Se requiere fecha de descarga.")
+        if not self.return_date:
+            self.write({"return_date": fields.Date.context_today(self)})
+        return True
+
+    def action_request_correction(self, reason):
+        self.ensure_one()
+        self.message_post(body=reason)
+        group = self.env.ref("container_demurrage.group_demurrage_billing")
+        users = group.users
+        user = users[0] if users else self.env.user
+        self.activity_schedule(
+            "mail.mail_activity_data_todo", user_id=user.id,
+            summary="Solicitud de corrección", note=reason)
+        return True
+
+    def action_refresh_estimate(self):
+        self.ensure_one()
+        if self.state == "open":
+            self.write({"as_of_date": fields.Date.today()})
+        return True
 
     @api.model_create_multi
     def create(self, vals_list):
