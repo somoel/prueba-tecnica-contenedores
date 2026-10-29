@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
 
-from container_demurrage.utils.iso6346 import (
+from odoo.addons.container_demurrage.utils.iso6346 import (
     normalize_container_number,
     calculate_check_digit,
     validate_container_number,
