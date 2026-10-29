@@ -41,8 +41,11 @@ class TestAgreement(TransactionCase):
 
     def test_duplicate_raises(self):
         self.Agreement.create(self._vals())
-        with self.assertRaises((IntegrityError, ValidationError)):
+        try:
             self.Agreement.create(self._vals())
+        except (IntegrityError, ValidationError):
+            return
+        self.fail("Se esperaba IntegrityError o ValidationError")
 
     def test_same_partner_other_line_allowed(self):
         self.Agreement.create(self._vals())
