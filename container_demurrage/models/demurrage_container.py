@@ -37,6 +37,7 @@ class DemurrageContainer(models.Model):
     discharge_date = fields.Date()
     return_date = fields.Date()
     as_of_date = fields.Date(default=lambda self: fields.Date.today())
+    last_reminder_on = fields.Date(readonly=True, copy=False)
     invoiced = fields.Boolean(default=False, copy=False)
     cancelled = fields.Boolean(default=False, copy=False)
     invoice_reference = fields.Char(readonly=True, copy=False)
@@ -539,6 +540,57 @@ class DemurrageContainer(models.Model):
         if self.state == "open":
             self.write({"as_of_date": fields.Date.today()})
         return True
+
+
+    @api.model
+    def _cron_daily(self, today=None):
+        if today is None:
+            today = fields.Date.context_today(self)
+        # Recalcular vencimiento de todos los contenedores abiertos
+        open_containers = self.search([("state", "=", "open")])
+        open_containers.write({"as_of_date": today})
+
+        ops_param = self.env["ir.config_parameter"].sudo().get_param(
+            "container_demurrage.operations_user_id")
+        if ops_param:
+            try:
+                ops_user_id = int(ops_param)
+            except (ValueError, TypeError):
+                ops_user_id = self.env.user.id
+        else:
+            ops_user_id = self.env.user.id
+
+        created = 0
+        for container in open_containers:
+            if container.last_reminder_on == today:
+                continue
+            open_activity = container.activity_ids.filtered(
+                lambda a: (a.summary or "").startswith("Demora:"))
+            if open_activity:
+                continue
+            if not (container.is_due_soon or container.is_overdue):
+                continue
+            due = container.due_date
+            if due and due > today:
+                deadline = due
+            else:
+                deadline = today
+            note = (
+                f"BL: {container.bl_id.name}\n"
+                f"Cliente: {container.partner_id.name}\n"
+                f"Fecha de vencimiento: {container.due_date}\n"
+                f"Estado: {container.state}"
+            )
+            container.activity_schedule(
+                "mail.mail_activity_data_todo",
+                user_id=ops_user_id,
+                summary=f"Demora: {container.container_number}",
+                note=note,
+                date_deadline=deadline,
+            )
+            container.write({"last_reminder_on": today})
+            created += 1
+        return created
 
     @api.model_create_multi
     def create(self, vals_list):

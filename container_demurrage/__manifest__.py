@@ -18,6 +18,7 @@
         "views/demurrage_catalog_views.xml",
         "views/res_partner_views.xml",
         "views/res_config_settings_views.xml",
+        "data/ir_cron.xml",
     ],
     "demo": [],
 }

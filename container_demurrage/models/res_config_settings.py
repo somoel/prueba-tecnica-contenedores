@@ -5,6 +5,9 @@ from odoo import models, fields
 class ResConfigSettings(models.TransientModel):
     _inherit = "res.config.settings"
 
+    operations_user_id = fields.Many2one(
+        "res.users",
+        config_parameter="container_demurrage.operations_user_id")
     default_admin_fee_percent = fields.Float(
         config_parameter="container_demurrage.default_admin_fee_percent",
         default=10.0)
