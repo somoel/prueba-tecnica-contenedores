@@ -10,3 +10,4 @@ from . import test_extended_cases
 from . import test_security
 from . import test_states
 from . import test_eir
+from . import test_state_wizards
