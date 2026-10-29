@@ -77,49 +77,53 @@ class TestContainerConstraints(TransactionCase):
                       str(cm.exception))
 
     def test_overlap_closed_periods_raises(self):
-        bl = self.BL.create(self._bl_vals())
+        bl1 = self.BL.create(self._bl_vals(name="BL001"))
+        bl2 = self.BL.create(self._bl_vals(name="BL002"))
         self.Container.create(self._container_vals(
-            bl, discharge_date=date(2026, 1, 10),
+            bl1, discharge_date=date(2026, 1, 10),
             return_date=date(2026, 1, 20)))
         with self.assertRaises(ValidationError) as cm:
             self.Container.create(self._container_vals(
-                bl, container_number="CSQU3054383",
+                bl2, container_number="CSQU3054383",
                 discharge_date=date(2026, 1, 15),
                 return_date=date(2026, 1, 25)))
         self.assertIn("El contenedor ya está registrado como afuera en ese periodo.",
                       str(cm.exception))
 
     def test_open_period_blocks_new_raises(self):
-        bl = self.BL.create(self._bl_vals())
+        bl1 = self.BL.create(self._bl_vals(name="BL001"))
+        bl2 = self.BL.create(self._bl_vals(name="BL002"))
         self.Container.create(self._container_vals(
-            bl, discharge_date=date(2026, 1, 10)))
+            bl1, discharge_date=date(2026, 1, 10)))
         with self.assertRaises(ValidationError) as cm:
             self.Container.create(self._container_vals(
-                bl, container_number="CSQU3054383",
+                bl2, container_number="CSQU3054383",
                 discharge_date=date(2026, 1, 15),
                 return_date=date(2026, 1, 25)))
         self.assertIn("El contenedor ya está registrado como afuera en ese periodo.",
                       str(cm.exception))
 
     def test_non_overlapping_periods_allowed(self):
-        bl = self.BL.create(self._bl_vals())
+        bl1 = self.BL.create(self._bl_vals(name="BL001"))
+        bl2 = self.BL.create(self._bl_vals(name="BL002"))
         self.Container.create(self._container_vals(
-            bl, discharge_date=date(2026, 1, 10),
+            bl1, discharge_date=date(2026, 1, 10),
             return_date=date(2026, 1, 20)))
         second = self.Container.create(self._container_vals(
-            bl, container_number="CSQU3054383",
+            bl2, container_number="CSQU3054383",
             discharge_date=date(2026, 2, 1),
             return_date=date(2026, 2, 10)))
         self.assertTrue(second.id)
 
     def test_cancelled_does_not_block(self):
-        bl = self.BL.create(self._bl_vals())
+        bl1 = self.BL.create(self._bl_vals(name="BL001"))
+        bl2 = self.BL.create(self._bl_vals(name="BL002"))
         first = self.Container.create(self._container_vals(
-            bl, discharge_date=date(2026, 1, 10),
+            bl1, discharge_date=date(2026, 1, 10),
             return_date=date(2026, 1, 20)))
         first.cancelled = True
         second = self.Container.create(self._container_vals(
-            bl, container_number="CSQU3054383",
+            bl2, container_number="CSQU3054383",
             discharge_date=date(2026, 1, 15),
             return_date=date(2026, 1, 25)))
         self.assertTrue(second.id)

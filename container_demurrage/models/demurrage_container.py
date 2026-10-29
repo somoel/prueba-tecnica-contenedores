@@ -2,7 +2,9 @@
 from datetime import date
 
 from odoo import models, fields, api
-from odoo.addons.container_demurrage.utils.iso6346 import normalize_container_number
+from odoo.exceptions import ValidationError
+from odoo.addons.container_demurrage.utils.iso6346 import (
+    normalize_container_number, validate_container_number)
 
 
 class DemurrageContainer(models.Model):
@@ -66,6 +68,50 @@ class DemurrageContainer(models.Model):
     def _compute_display_name(self):
         for record in self:
             record.display_name = f"{record.container_number} ({record.bl_id.name})"
+
+    @api.constrains("container_number")
+    def _check_container_number(self):
+        for record in self:
+            if not record.container_number:
+                continue
+            is_valid, error, _expected = validate_container_number(
+                record.container_number)
+            if not is_valid:
+                raise ValidationError(error)
+
+    @api.constrains("discharge_date", "return_date", "container_number",
+                    "cancelled", "active", "bl_id")
+    def _check_dates_and_overlap(self):
+        for record in self:
+            if record.return_date:
+                if not record.discharge_date:
+                    raise ValidationError(
+                        "La fecha de devolución requiere fecha de descarga.")
+                if record.return_date < record.discharge_date:
+                    raise ValidationError(
+                        "La fecha de devolución no puede ser anterior a la descarga.")
+                if record.return_date > fields.Date.context_today(self):
+                    raise ValidationError(
+                        "La fecha de devolución no puede ser futura.")
+            if record.cancelled or not record.discharge_date:
+                continue
+            domain = [
+                ("container_number", "=", record.container_number),
+                ("id", "!=", record.id),
+                ("cancelled", "=", False),
+                ("discharge_date", "!=", False),
+            ]
+            others = self.with_context(active_test=False).search(domain)
+            rec_start = record.discharge_date
+            rec_end = record.return_date or date.max
+            for other in others:
+                if not other.discharge_date:
+                    continue
+                other_start = other.discharge_date
+                other_end = other.return_date or date.max
+                if rec_start <= other_end and other_start <= rec_end:
+                    raise ValidationError(
+                        "El contenedor ya está registrado como afuera en ese periodo.")
 
     @api.model_create_multi
     def create(self, vals_list):
