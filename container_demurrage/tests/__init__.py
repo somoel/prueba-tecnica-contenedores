@@ -16,3 +16,4 @@ from . import test_parsing
 from . import test_import
 from . import test_cron
 from . import test_carrier_invoice
+from . import test_invoice
