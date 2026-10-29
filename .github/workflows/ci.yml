@@ -45,6 +45,7 @@ jobs:
         run: |
           docker run --rm --network host \
             -e PYTHONDONTWRITEBYTECODE=1 \
+            -e HOST=127.0.0.1 -e PORT=5432 -e USER=odoo -e PASSWORD=odoo \
             -v "$PWD/container_demurrage:/mnt/extra-addons/container_demurrage" \
             odoo:17.0 \
             --addons-path=/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons \
@@ -56,6 +57,7 @@ jobs:
         run: |
           docker run --rm --network host \
             -e PYTHONDONTWRITEBYTECODE=1 \
+            -e HOST=127.0.0.1 -e PORT=5432 -e USER=odoo -e PASSWORD=odoo \
             -v "$PWD/container_demurrage:/mnt/extra-addons/container_demurrage" \
             odoo:17.0 \
             --addons-path=/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons \
@@ -67,6 +69,7 @@ jobs:
         run: |
           docker run --rm --network host \
             -e PYTHONDONTWRITEBYTECODE=1 \
+            -e HOST=127.0.0.1 -e PORT=5432 -e USER=odoo -e PASSWORD=odoo \
             -v "$PWD/container_demurrage:/mnt/extra-addons/container_demurrage" \
             odoo:17.0 \
             --addons-path=/mnt/extra-addons,/usr/lib/python3/dist-packages/odoo/addons \
