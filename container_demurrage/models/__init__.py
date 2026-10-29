@@ -7,3 +7,4 @@ from . import res_partner
 from . import demurrage_bl
 from . import demurrage_container
 from . import res_config_settings
+from . import demurrage_correction

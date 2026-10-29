@@ -8,6 +8,9 @@
     "application": True,
     "installable": True,
     "depends": ["base", "mail", "base_setup", "account"],
-    "data": [],
+    "data": [
+        "security/demurrage_security.xml",
+        "security/ir.model.access.csv",
+    ],
     "demo": [],
 }
