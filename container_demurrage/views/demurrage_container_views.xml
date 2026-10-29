@@ -119,6 +119,10 @@
                                 <field name="invoice_needs_review"/>
                                 <field name="invoiced_carrier_usd" readonly="1"/>
                                 <field name="invoiced_customer_usd" readonly="1"/>
+                                <field name="invoiced_days_out" readonly="1"/>
+                                <field name="invoiced_free_days" readonly="1"/>
+                                <field name="invoiced_due_date" readonly="1"/>
+                                <field name="invoiced_tariff_name" readonly="1"/>
                                 <field name="invoiced_demurrage_days" readonly="1"/>
                                 <field name="invoiced_admin_fee_percent" readonly="1"/>
                                 <field name="invoiced_exchange_rate" readonly="1"/>

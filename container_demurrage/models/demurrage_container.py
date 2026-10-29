@@ -267,6 +267,7 @@ class DemurrageContainer(models.Model):
                 record.carrier_charge_usd = record.invoiced_carrier_usd
                 record.customer_charge_usd = record.invoiced_customer_usd
                 record.exchange_rate = record.invoiced_exchange_rate
+                record.exchange_rate_date = record.invoice_date
                 record.customer_charge_cop = record.invoiced_customer_cop
                 record.calculation_status = "ok"
                 record.is_estimate = False
