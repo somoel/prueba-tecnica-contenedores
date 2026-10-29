@@ -9,3 +9,4 @@ from . import test_acceptance_cases
 from . import test_extended_cases
 from . import test_security
 from . import test_states
+from . import test_eir
