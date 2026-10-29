@@ -225,3 +225,28 @@ class TestInvoice(TransactionCase):
         # change to date with no rate
         with self.assertRaises(UserError):
             move.invoice_date = date(2025, 1, 1)
+
+    def test_invoice_freezes_days_and_tariff(self):
+        wiz = self.Wizard.create({
+            "partner_id": self.partner.id,
+            "container_ids": [(6, 0, [self.container.id])],
+            "invoice_date": date(2026, 3, 25),
+        })
+        action = wiz.action_create_invoice()
+        self.container.invalidate_recordset()
+        self.assertEqual(self.container.days_out, 19)
+        self.assertEqual(self.container.free_days, 7)
+        self.assertEqual(self.container.due_date, date(2026, 3, 8))
+        self.assertAlmostEqual(self.container.carrier_charge_usd, 1260.0, places=2)
+        self.assertAlmostEqual(self.container.customer_charge_usd, 1386.0, places=2)
+
+        # alter tariff free days and tiers after invoicing
+        self.tariff.write({"free_days": 99})
+        tier = self.tariff.tier_ids[0]
+        tier.write({"rate_per_day": 999.0})
+        self.container.invalidate_recordset()
+        self.assertEqual(self.container.days_out, 19)
+        self.assertEqual(self.container.free_days, 7)
+        self.assertEqual(self.container.due_date, date(2026, 3, 8))
+        self.assertAlmostEqual(self.container.carrier_charge_usd, 1260.0, places=2)
+        self.assertAlmostEqual(self.container.customer_charge_usd, 1386.0, places=2)

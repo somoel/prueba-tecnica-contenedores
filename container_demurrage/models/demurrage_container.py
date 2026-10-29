@@ -48,6 +48,10 @@ class DemurrageContainer(models.Model):
     invoiced_customer_usd = fields.Monetary(
         readonly=True, copy=False, currency_field="currency_id")
     invoiced_demurrage_days = fields.Integer(readonly=True, copy=False)
+    invoiced_days_out = fields.Integer(readonly=True, copy=False)
+    invoiced_free_days = fields.Integer(readonly=True, copy=False)
+    invoiced_due_date = fields.Date(readonly=True, copy=False)
+    invoiced_tariff_name = fields.Char(readonly=True, copy=False)
     invoiced_admin_fee_percent = fields.Float(readonly=True, copy=False)
     invoiced_exchange_rate = fields.Float(readonly=True, copy=False)
     invoiced_customer_cop = fields.Monetary(
@@ -255,6 +259,9 @@ class DemurrageContainer(models.Model):
                 continue
 
             if record.invoiced and record.invoiced_at:
+                record.days_out = record.invoiced_days_out
+                record.free_days = record.invoiced_free_days
+                record.due_date = record.invoiced_due_date
                 record.demurrage_days = record.invoiced_demurrage_days
                 record.admin_fee_percent = record.invoiced_admin_fee_percent
                 record.carrier_charge_usd = record.invoiced_carrier_usd
@@ -497,6 +504,10 @@ class DemurrageContainer(models.Model):
             "invoiced_carrier_usd": self.carrier_charge_usd,
             "invoiced_customer_usd": self.customer_charge_usd,
             "invoiced_demurrage_days": self.demurrage_days,
+            "invoiced_days_out": self.days_out,
+            "invoiced_free_days": self.free_days,
+            "invoiced_due_date": self.due_date,
+            "invoiced_tariff_name": (self.tariff_id.name if self.tariff_id else False),
             "invoiced_admin_fee_percent": self.admin_fee_percent,
             "invoiced_exchange_rate": exchange_rate,
             "invoiced_customer_cop": cop_amount,
