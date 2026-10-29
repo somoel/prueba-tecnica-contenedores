@@ -5,3 +5,4 @@ from . import test_agreement
 from . import test_iso6346
 from . import test_bl_container
 from . import test_container_constraints
+from . import test_calculator
