@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+import base64
 from datetime import date
 from pathlib import Path
 
@@ -104,7 +105,7 @@ class TestImport(TransactionCase):
     def _make_wizard(self):
         wiz = self.Wizard.create({"company_id": self.env.company.id})
         data = self.csv_path.read_bytes()
-        wiz.write({"file": data, "filename": self.csv_path.name})
+        wiz.write({"file": base64.b64encode(data), "filename": self.csv_path.name})
         return wiz
 
     def test_analyze(self):

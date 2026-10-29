@@ -35,3 +35,5 @@ access_demurrage_cancel_wizard_manager,access demurrage cancel wizard manager,mo
 access_demurrage_mark_invoiced_wizard_operations,access demurrage mark invoiced wizard operations,model_demurrage_mark_invoiced_wizard,container_demurrage.group_demurrage_operations,1,1,1,0
 access_demurrage_mark_invoiced_wizard_billing,access demurrage mark invoiced wizard billing,model_demurrage_mark_invoiced_wizard,container_demurrage.group_demurrage_billing,1,1,1,0
 access_demurrage_mark_invoiced_wizard_manager,access demurrage mark invoiced wizard manager,model_demurrage_mark_invoiced_wizard,container_demurrage.group_demurrage_manager,1,1,1,0
+access_demurrage_import_wizard_user,access demurrage import wizard user,model_demurrage_import_wizard,base.group_user,1,1,1,1
+access_demurrage_import_line_user,access demurrage import line user,model_demurrage_import_line,base.group_user,1,1,1,1
