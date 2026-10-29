@@ -224,7 +224,7 @@ Leyenda: `[ ]` pendiente, `[~]` en curso, `[x]` hecho.
 | F10.5 | README limitaciones/guion | Manual | [x] | documentación/verificación |
 | F10.6 | `docs/tdd.md` | Manual | [x] | documentación/verificación |
 | F10.7 | Instalación limpia y simulación evaluador | Script | [x] | documentación/verificación |
-| F10.8 | Release `v1.0.0` | GitHub | [ ] | |
+| F10.8 | Release `v1.0.0` | GitHub | [x] | v1.0.0 |
 
 ---
 
@@ -291,3 +291,4 @@ Se actualiza al cerrar cada tarea.
 | 2026-10-29 | Estados, seguridad, vistas | Bloqueo, reapertura, EIR, filtros | `32d178f` … `8de5f0f` |
 | 2026-10-29 | Deseables y extras | Importación 6/4, cron, conciliación, COP, factura, reportes | `20415e5` … `6f96f97` |
 | 2026-10-29 | Demo y documentación | Datos demo, README, TDD, endurecimiento | `3d56468`, `295a225`, `6497e8c`, `d743c87` |
+| 2026-10-29 | CI y entrega | CI verde, clon limpio instalado, release | `f89f49c` |
