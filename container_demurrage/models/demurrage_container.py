@@ -59,6 +59,14 @@ class DemurrageContainer(models.Model):
         compute="_compute_state", store=True)
     notes = fields.Text()
     active = fields.Boolean(default=True)
+
+    eir_attachment_ids = fields.Many2many(
+        "ir.attachment", "demurrage_container_eir_rel",
+        "container_id", "attachment_id", string="Adjuntos EIR")
+    eir_count = fields.Integer(
+        compute="_compute_eir", store=True, default=0)
+    missing_eir = fields.Boolean(
+        compute="_compute_eir", store=True, default=True)
     company_id = fields.Many2one(
         related="bl_id.company_id", store=True, readonly=True)
 
@@ -103,6 +111,13 @@ class DemurrageContainer(models.Model):
         for record in self:
             record.name = record.container_number
 
+    @api.depends("eir_attachment_ids")
+    def _compute_eir(self):
+        for record in self:
+            count = len(record.eir_attachment_ids)
+            record.eir_count = count
+            record.missing_eir = count == 0
+
     @api.depends("cancelled", "invoiced", "return_date", "discharge_date")
     def _compute_state(self):
         for record in self:
@@ -131,6 +146,24 @@ class DemurrageContainer(models.Model):
                 record.container_number)
             if not is_valid:
                 raise ValidationError(error)
+
+    @api.constrains("eir_attachment_ids")
+    def _check_eir_attachments(self):
+        for record in self:
+            for attachment in record.eir_attachment_ids:
+                if not attachment.mimetype:
+                    raise ValidationError(
+                        "El adjunto EIR no tiene un tipo MIME válido.")
+                if not (
+                    attachment.mimetype == "application/pdf"
+                    or attachment.mimetype.startswith("image/")
+                ):
+                    raise ValidationError(
+                        "El adjunto EIR debe ser un PDF o una imagen.")
+                size = attachment.file_size or 0
+                if size > 10 * 1024 * 1024:
+                    raise ValidationError(
+                        "El adjunto EIR no puede superar los 10 MB.")
 
     @api.constrains("discharge_date", "return_date", "container_number",
                     "cancelled", "active", "bl_id")
