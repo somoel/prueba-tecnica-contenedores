@@ -287,7 +287,7 @@ Se actualiza al cerrar cada tarea.
 | 2026-10-29 | Prueba de Beam | `BEAM_OK`; subagente disponible | — |
 | 2026-10-29 | Plan y trazabilidad | `PLAN.md` creado | `4f845e8` |
 | 2026-10-29 | Entorno y esqueleto | Odoo 17 + PostgreSQL + scripts + CI | `077e80d`, `d048642`, `cf24203`, `855ce63` |
-| 2026-10-29 | Catálogos y cálculo | 197 pruebas verdes; casos 1–9 | `1ba5d3e` … `872aaef` |
+| 2026-10-29 | Catálogos y cálculo | 200 pruebas verdes; casos 1–9 | `1ba5d3e` … `872aaef` |
 | 2026-10-29 | Estados, seguridad, vistas | Bloqueo, reapertura, EIR, filtros | `32d178f` … `8de5f0f` |
 | 2026-10-29 | Deseables y extras | Importación 6/4, cron, conciliación, COP, factura, reportes | `20415e5` … `6f96f97` |
 | 2026-10-29 | Demo y documentación | Datos demo, README, TDD, endurecimiento | `3d56468`, `295a225`, `6497e8c`, `d743c87` |

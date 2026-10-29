@@ -61,6 +61,6 @@ Comando: scripts/run_tests.sh --test-tags=/container_demurrage:TestISO6346
 ## Resultado final
 
 ```text
-container_demurrage: 197 tests
+container_demurrage: 200 tests
 0 failed, 0 error(s)
 ```
