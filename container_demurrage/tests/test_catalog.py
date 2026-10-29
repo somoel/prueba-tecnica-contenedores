@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from odoo.tests.common import TransactionCase
-from odoo.exceptions import ValidationError
 
 try:
     from psycopg2 import IntegrityError
@@ -29,7 +28,7 @@ class TestCatalog(TransactionCase):
 
     def test_duplicate_container_type_code_raises(self):
         self.ContainerType.create({"name": "Dry 20", "code": "20DRY"})
-        with self.assertRaises((ValidationError, IntegrityError)):
+        with self.assertRaises(IntegrityError):
             self.ContainerType.create({"name": "Otro", "code": "20DRY"})
 
     def test_create_shipping_line(self):
@@ -46,7 +45,7 @@ class TestCatalog(TransactionCase):
 
     def test_duplicate_shipping_line_code_raises(self):
         self.ShippingLine.create({"name": "Maersk", "code": "MAERSK"})
-        with self.assertRaises((ValidationError, IntegrityError)):
+        with self.assertRaises(IntegrityError):
             self.ShippingLine.create({"name": "Otra", "code": "MAERSK"})
 
     def test_archive_hides_from_default_search(self):
