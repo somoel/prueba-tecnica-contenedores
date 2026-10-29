@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- Navieras -->
+        <record id="shipping_line_atl" model="demurrage.shipping.line">
+            <field name="name">Naviera Atlántico</field>
+            <field name="code">ATL</field>
+        </record>
+        <record id="shipping_line_msl" model="demurrage.shipping.line">
+            <field name="name">Mar del Sur Line</field>
+            <field name="code">MSL</field>
+        </record>
+
+        <!-- Tipos de contenedor -->
+        <record id="container_type_20dv" model="demurrage.container.type">
+            <field name="name">20 DV</field>
+            <field name="code">20DV</field>
+        </record>
+        <record id="container_type_40dv" model="demurrage.container.type">
+            <field name="name">40 DV</field>
+            <field name="code">40DV</field>
+        </record>
+        <record id="container_type_40hc" model="demurrage.container.type">
+            <field name="name">40 HC</field>
+            <field name="code">40HC</field>
+        </record>
+        <record id="container_type_40rf" model="demurrage.container.type">
+            <field name="name">40 RF</field>
+            <field name="code">40RF</field>
+        </record>
+
+        <!-- Tarifas ATL -->
+        <record id="tariff_atl_20dv" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="valid_from">2026-01-01</field>
+            <field name="free_days">7</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':5,'rate_per_day':35.0}),(0,0,{'day_from':6,'day_to':10,'rate_per_day':70.0}),(0,0,{'day_from':11,'day_to':0,'rate_per_day':110.0})]"/>
+        </record>
+        <record id="tariff_atl_40dv" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="container_type_id" ref="container_type_40dv"/>
+            <field name="valid_from">2026-01-01</field>
+            <field name="free_days">7</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':5,'rate_per_day':60.0}),(0,0,{'day_from':6,'day_to':10,'rate_per_day':120.0}),(0,0,{'day_from':11,'day_to':0,'rate_per_day':180.0})]"/>
+        </record>
+        <record id="tariff_atl_40hc" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="container_type_id" ref="container_type_40hc"/>
+            <field name="valid_from">2026-01-01</field>
+            <field name="free_days">7</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':5,'rate_per_day':60.0}),(0,0,{'day_from':6,'day_to':10,'rate_per_day':120.0}),(0,0,{'day_from':11,'day_to':0,'rate_per_day':180.0})]"/>
+        </record>
+        <record id="tariff_atl_40rf" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="container_type_id" ref="container_type_40rf"/>
+            <field name="valid_from">2026-01-01</field>
+            <field name="free_days">4</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':5,'rate_per_day':150.0}),(0,0,{'day_from':6,'day_to':0,'rate_per_day':250.0})]"/>
+        </record>
+
+        <!-- Tarifas MSL primer semestre -->
+        <record id="tariff_msl_20dv_h1" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="valid_from">2026-01-01</field>
+            <field name="valid_to">2026-06-30</field>
+            <field name="free_days">10</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':7,'rate_per_day':40.0}),(0,0,{'day_from':8,'day_to':0,'rate_per_day':85.0})]"/>
+        </record>
+        <record id="tariff_msl_40dv_h1" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="container_type_id" ref="container_type_40dv"/>
+            <field name="valid_from">2026-01-01</field>
+            <field name="valid_to">2026-06-30</field>
+            <field name="free_days">10</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':7,'rate_per_day':75.0}),(0,0,{'day_from':8,'day_to':0,'rate_per_day':150.0})]"/>
+        </record>
+        <record id="tariff_msl_40hc_h1" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="container_type_id" ref="container_type_40hc"/>
+            <field name="valid_from">2026-01-01</field>
+            <field name="valid_to">2026-06-30</field>
+            <field name="free_days">10</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':7,'rate_per_day':75.0}),(0,0,{'day_from':8,'day_to':0,'rate_per_day':150.0})]"/>
+        </record>
+
+        <!-- Tarifas MSL desde 2026-07-01 -->
+        <record id="tariff_msl_20dv_h2" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="valid_from">2026-07-01</field>
+            <field name="free_days">8</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':7,'rate_per_day':45.0}),(0,0,{'day_from':8,'day_to':0,'rate_per_day':95.0})]"/>
+        </record>
+        <record id="tariff_msl_40dv_h2" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="container_type_id" ref="container_type_40dv"/>
+            <field name="valid_from">2026-07-01</field>
+            <field name="free_days">8</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':7,'rate_per_day':85.0}),(0,0,{'day_from':8,'day_to':0,'rate_per_day':170.0})]"/>
+        </record>
+        <record id="tariff_msl_40hc_h2" model="demurrage.tariff">
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="container_type_id" ref="container_type_40hc"/>
+            <field name="valid_from">2026-07-01</field>
+            <field name="free_days">8</field>
+            <field name="tier_ids" eval="[(0,0,{'day_from':1,'day_to':7,'rate_per_day':85.0}),(0,0,{'day_from':8,'day_to':0,'rate_per_day':170.0})]"/>
+        </record>
+
+        <!-- Clientes -->
+        <record id="partner_sol" model="res.partner">
+            <field name="name">Importadora Sol S.A.S.</field>
+            <field name="is_company" eval="True"/>
+        </record>
+        <record id="partner_ferreteria" model="res.partner">
+            <field name="name">Ferretería El Tornillo S.A.S.</field>
+            <field name="is_company" eval="True"/>
+        </record>
+        <record id="partner_textiles" model="res.partner">
+            <field name="name">Textiles Andinos Ltda.</field>
+            <field name="is_company" eval="True"/>
+        </record>
+        <record id="partner_frutas" model="res.partner">
+            <field name="name">Frutas del Valle Export S.A.S.</field>
+            <field name="is_company" eval="True"/>
+        </record>
+
+        <!-- Acuerdos -->
+        <record id="agreement_ferreteria_atl" model="demurrage.customer.agreement">
+            <field name="partner_id" ref="partner_ferreteria"/>
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="extra_free_days">5</field>
+            <field name="admin_fee_percent">10.0</field>
+        </record>
+        <record id="agreement_textiles_msl" model="demurrage.customer.agreement">
+            <field name="partner_id" ref="partner_textiles"/>
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="extra_free_days">3</field>
+            <field name="admin_fee_percent">5.0</field>
+        </record>
+
+        <!-- Tasa COP -->
+        <record id="rate_cop_2026" model="res.currency.rate">
+            <field name="currency_id" ref="base.COP"/>
+            <field name="name">2026-01-01</field>
+            <field name="rate">4000.0</field>
+            <field name="company_id" ref="base.main_company"/>
+        </record>
+
+        <!-- BLs y contenedores -->
+        <record id="bl_nat_26_0311" model="demurrage.bl">
+            <field name="name">NAT-26-0311</field>
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="partner_id" ref="partner_sol"/>
+            <field name="discharge_date">2026-03-02</field>
+        </record>
+        <record id="cont_nat_0311_1" model="demurrage.container">
+            <field name="container_number">NATU4120783</field>
+            <field name="bl_id" ref="bl_nat_26_0311"/>
+            <field name="container_type_id" ref="container_type_40hc"/>
+            <field name="discharge_date">2026-03-02</field>
+            <field name="return_date">2026-03-20</field>
+        </record>
+        <record id="cont_nat_0311_2" model="demurrage.container">
+            <field name="container_number">NATU6625310</field>
+            <field name="bl_id" ref="bl_nat_26_0311"/>
+            <field name="container_type_id" ref="container_type_40hc"/>
+            <field name="discharge_date">2026-03-03</field>
+            <field name="return_date">2026-03-25</field>
+        </record>
+
+        <record id="bl_nat_26_0415" model="demurrage.bl">
+            <field name="name">NAT-26-0415</field>
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="partner_id" ref="partner_ferreteria"/>
+            <field name="discharge_date">2026-04-10</field>
+        </record>
+        <record id="cont_nat_0415" model="demurrage.container">
+            <field name="container_number">NATU5081634</field>
+            <field name="bl_id" ref="bl_nat_26_0415"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="discharge_date">2026-04-10</field>
+            <field name="return_date">2026-04-21</field>
+        </record>
+
+        <record id="bl_msl_0628" model="demurrage.bl">
+            <field name="name">MSL-0628-A</field>
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="partner_id" ref="partner_textiles"/>
+            <field name="discharge_date">2026-06-28</field>
+        </record>
+        <record id="cont_msl_0628" model="demurrage.container">
+            <field name="container_number">MSLU2209456</field>
+            <field name="bl_id" ref="bl_msl_0628"/>
+            <field name="container_type_id" ref="container_type_40dv"/>
+            <field name="discharge_date">2026-06-28</field>
+            <field name="return_date">2026-07-15</field>
+        </record>
+
+        <record id="bl_nat_26_0801" model="demurrage.bl">
+            <field name="name">NAT-26-0801</field>
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="partner_id" ref="partner_frutas"/>
+            <field name="discharge_date">2026-08-01</field>
+        </record>
+        <record id="cont_nat_0801" model="demurrage.container">
+            <field name="container_number">NATU7713041</field>
+            <field name="bl_id" ref="bl_nat_26_0801"/>
+            <field name="container_type_id" ref="container_type_40rf"/>
+            <field name="discharge_date">2026-08-01</field>
+            <field name="return_date">2026-08-14</field>
+        </record>
+
+        <record id="bl_msl_0905" model="demurrage.bl">
+            <field name="name">MSL-0905-C</field>
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="partner_id" ref="partner_sol"/>
+            <field name="discharge_date">2026-09-05</field>
+        </record>
+        <record id="cont_msl_0905" model="demurrage.container">
+            <field name="container_number">MSLU6135876</field>
+            <field name="bl_id" ref="bl_msl_0905"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="discharge_date">2026-09-05</field>
+            <field name="as_of_date">2026-09-20</field>
+        </record>
+
+        <record id="bl_nat_26_0920" model="demurrage.bl">
+            <field name="name">NAT-26-0920</field>
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="partner_id" ref="partner_sol"/>
+            <field name="discharge_date">2026-09-20</field>
+        </record>
+        <record id="cont_nat_0920" model="demurrage.container">
+            <field name="container_number">NATU3002195</field>
+            <field name="bl_id" ref="bl_nat_26_0920"/>
+            <field name="container_type_id" ref="container_type_40hc"/>
+            <field name="discharge_date">2026-09-20</field>
+            <field name="return_date">2026-09-25</field>
+        </record>
+
+        <record id="bl_msl_0910" model="demurrage.bl">
+            <field name="name">MSL-0910-B</field>
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="partner_id" ref="partner_sol"/>
+            <field name="discharge_date">2026-09-10</field>
+        </record>
+        <record id="cont_msl_0910" model="demurrage.container">
+            <field name="container_number">MSLU1458705</field>
+            <field name="bl_id" ref="bl_msl_0910"/>
+            <field name="container_type_id" ref="container_type_40hc"/>
+            <field name="discharge_date">2026-09-10</field>
+            <field name="as_of_date">2026-10-29</field>
+        </record>
+
+        <record id="bl_msl_0803" model="demurrage.bl">
+            <field name="name">MSL-0803-A</field>
+            <field name="shipping_line_id" ref="shipping_line_msl"/>
+            <field name="partner_id" ref="partner_frutas"/>
+            <field name="discharge_date">2026-08-03</field>
+        </record>
+        <record id="cont_msl_0803" model="demurrage.container">
+            <field name="container_number">MSLU9083143</field>
+            <field name="bl_id" ref="bl_msl_0803"/>
+            <field name="container_type_id" ref="container_type_40rf"/>
+            <field name="discharge_date">2026-08-03</field>
+            <field name="return_date">2026-08-20</field>
+        </record>
+
+        <record id="bl_demo_0504" model="demurrage.bl">
+            <field name="name">DEMO-0504</field>
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="partner_id" ref="partner_sol"/>
+            <field name="discharge_date">2026-05-04</field>
+        </record>
+        <record id="cont_demo_0504_1" model="demurrage.container">
+            <field name="container_number">MSCU1234566</field>
+            <field name="bl_id" ref="bl_demo_0504"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="discharge_date">2026-05-04</field>
+            <field name="return_date">2026-05-10</field>
+        </record>
+        <record id="cont_demo_0504_2" model="demurrage.container">
+            <field name="container_number">MSCU7654329</field>
+            <field name="bl_id" ref="bl_demo_0504"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="discharge_date">2026-05-04</field>
+            <field name="return_date">2026-05-11</field>
+        </record>
+
+        <record id="bl_demo_0914" model="demurrage.bl">
+            <field name="name">DEMO-0914</field>
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="partner_id" ref="partner_sol"/>
+            <field name="discharge_date">2026-09-14</field>
+        </record>
+        <record id="cont_demo_0914" model="demurrage.container">
+            <field name="container_number">MSCU2468105</field>
+            <field name="bl_id" ref="bl_demo_0914"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="discharge_date">2026-09-14</field>
+            <field name="return_date">2026-09-14</field>
+        </record>
+
+        <record id="bl_demo_1027" model="demurrage.bl">
+            <field name="name">DEMO-1027</field>
+            <field name="shipping_line_id" ref="shipping_line_atl"/>
+            <field name="partner_id" ref="partner_sol"/>
+            <field name="discharge_date">2026-10-27</field>
+        </record>
+        <record id="cont_demo_1027" model="demurrage.container">
+            <field name="container_number">CSQU3054383</field>
+            <field name="bl_id" ref="bl_demo_1027"/>
+            <field name="container_type_id" ref="container_type_20dv"/>
+            <field name="discharge_date">2026-10-27</field>
+            <field name="as_of_date">2026-10-29</field>
+        </record>
+    </data>
+</odoo>
