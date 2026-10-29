@@ -7,3 +7,4 @@ from . import test_bl_container
 from . import test_container_constraints
 from . import test_calculator
 from . import test_acceptance_cases
+from . import test_extended_cases
