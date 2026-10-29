@@ -166,10 +166,10 @@ Leyenda: `[ ]` pendiente, `[~]` en curso, `[x]` hecho.
 
 | ID | Tarea | Prueba | Estado | Commit |
 |---|---|---|---|---|
-| F0.1 | Repositorio, `.gitignore`, licencia, `PLAN.md` | — | [ ] | |
-| F0.2 | Scripts de entorno `pg.py`, `run_odoo.sh`, `run_tests.sh` | Arranque local | [ ] | |
-| F0.3 | Esqueleto del módulo | Instalación vacía | [ ] | |
-| F0.4 | Workflow CI | Workflow verde | [ ] | |
+| F0.1 | Repositorio, `.gitignore`, licencia, `PLAN.md` | — | [x] | `4f845e8` |
+| F0.2 | Scripts de entorno `pg.py`, `run_odoo.sh`, `run_tests.sh` | Arranque local | [x] | `077e80d`, `d048642` |
+| F0.3 | Esqueleto del módulo | Instalación vacía | [x] | `cf24203` |
+| F0.4 | Workflow CI | Workflow creado; pendiente primer run | [x] | `855ce63` |
 | F1.1 | Tipos de contenedor | `test_container_type.py` | [ ] | |
 | F1.2 | Navieras | `test_shipping_line.py` | [ ] | |
 | F1.3 | Tarifas y vigencia | `test_tariff.py` | [ ] | |
@@ -284,4 +284,5 @@ Se actualiza al cerrar cada tarea.
 | Fecha | Tarea | Resultado | Commit |
 |---|---|---|---|
 | 2026-10-29 | Prueba de Beam | `BEAM_OK`; subagente disponible | — |
-| 2026-10-29 | Plan y trazabilidad | `PLAN.md` creado | pendiente |
+| 2026-10-29 | Plan y trazabilidad | `PLAN.md` creado | `4f845e8` |
+| 2026-10-29 | Entorno y esqueleto | Odoo 17 + PostgreSQL + scripts + CI | `077e80d`, `d048642`, `cf24203`, `855ce63` |
