@@ -72,7 +72,8 @@ def read_sql(args):
 def cmd_psql(args):
     sql = read_sql(args)
     server = get_server()
-    uri = server.get_uri(database="postgres")
+    db = getattr(args, "db", None) or "demurrage_clean"
+    uri = server.get_uri(database=db)
     conn = psycopg2.connect(uri)
     conn.autocommit = True
     try:
@@ -96,6 +97,7 @@ def main():
     sub.add_parser("status", help="Estado de PostgreSQL")
     psql = sub.add_parser("psql", help="Ejecuta SQL")
     psql.add_argument("sql", nargs="*", help="Sentencia SQL")
+    psql.add_argument("--db", "-d", default=None, help="Base de datos a usar (por defecto demurrage_clean)")
     args = parser.parse_args()
 
     if args.command == "start":

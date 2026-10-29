@@ -11,8 +11,8 @@ if [ "$#" -ge 3 ]; then
 fi
 
 # Base de datos limpia.
-"$ROOT/scripts/pg.py" psql "DROP DATABASE IF EXISTS ${DB};"
-"$ROOT/scripts/pg.py" psql "CREATE DATABASE ${DB} OWNER odoo;"
+"$ROOT/scripts/pg.py" psql --db postgres "DROP DATABASE IF EXISTS ${DB};"
+"$ROOT/scripts/pg.py" psql --db postgres "CREATE DATABASE ${DB} OWNER odoo;"
 
 mkdir -p /tmp/opencode
 LOG="$(mktemp /tmp/opencode/clean_install.XXXXXX.log)"
@@ -35,9 +35,11 @@ if ! "$ROOT/.venv/bin/python" "$ROOT/.odoo/odoo/odoo-bin" "${ARGS[@]}" ${EXTRA_A
   exit 1
 fi
 
-if grep -q "CRITICAL" "$LOG"; then
-  echo "Se encontró CRITICAL en el log. Log: $LOG" >&2
-  grep -n "CRITICAL" "$LOG" >&2
+# Se ignoran los errores de docutils/RST de las descripciones de módulos de Odoo
+# (líneas del tipo "<string>:N: (ERROR/K) ..."), que no impiden la instalación.
+if grep -nE "ERROR|CRITICAL|not found" "$LOG" | grep -vE '<string>:[0-9]+: \(ERROR/[0-9]+\)' | grep -q .; then
+  echo "Se encontró ERROR/CRITICAL/not found en el log. Log: $LOG" >&2
+  grep -nE "ERROR|CRITICAL|not found" "$LOG" | grep -vE '<string>:[0-9]+: \(ERROR/[0-9]+\)' >&2
   exit 1
 fi
 
