@@ -14,6 +14,7 @@
         "views/demurrage_state_wizard_views.xml",
         "views/demurrage_import_views.xml",
         "views/demurrage_container_views.xml",
+        "views/demurrage_carrier_invoice_views.xml",
         "views/demurrage_bl_views.xml",
         "views/demurrage_catalog_views.xml",
         "views/res_partner_views.xml",

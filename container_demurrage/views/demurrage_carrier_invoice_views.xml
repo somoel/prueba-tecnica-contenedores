@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_demurrage_carrier_invoice_tree" model="ir.ui.view">
+        <field name="name">demurrage.carrier.invoice.tree</field>
+        <field name="model">demurrage.carrier.invoice</field>
+        <field name="arch" type="xml">
+            <tree string="Facturas naviera">
+                <field name="name"/>
+                <field name="shipping_line_id"/>
+                <field name="invoice_date"/>
+                <field name="currency_id"/>
+                <field name="total_usd"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_demurrage_carrier_invoice_form" model="ir.ui.view">
+        <field name="name">demurrage.carrier.invoice.form</field>
+        <field name="model">demurrage.carrier.invoice</field>
+        <field name="arch" type="xml">
+            <form string="Factura naviera">
+                <sheet>
+                    <group>
+                        <field name="name"/>
+                        <field name="shipping_line_id"/>
+                        <field name="invoice_date"/>
+                        <field name="currency_id"/>
+                    </group>
+                    <notebook>
+                        <page string="Líneas">
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="container_id"/>
+                                    <field name="amount_usd"/>
+                                    <field name="expected_usd" readonly="1"/>
+                                    <field name="variance_usd" readonly="1"/>
+                                    <field name="note"/>
+                                </tree>
+                            </field>
+                        </page>
+                        <page string="Adjuntos">
+                            <field name="attachment_ids" widget="many2many_binary"/>
+                        </page>
+                    </notebook>
+                    <group>
+                        <field name="total_usd" readonly="1"/>
+                        <field name="notes"/>
+                        <field name="company_id"/>
+                        <field name="active"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_demurrage_carrier_invoice" model="ir.actions.act_window">
+        <field name="name">Facturas naviera</field>
+        <field name="res_model">demurrage.carrier.invoice</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <!-- Heredar formulario del contenedor -->
+    <record id="view_demurrage_container_form_carrier_invoice" model="ir.ui.view">
+        <field name="name">demurrage.container.form.carrier.invoice</field>
+        <field name="model">demurrage.container</field>
+        <field name="inherit_id" ref="container_demurrage.view_demurrage_container_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Factura naviera">
+                    <field name="carrier_invoice_line_ids" readonly="1">
+                        <tree>
+                            <field name="invoice_id"/>
+                            <field name="amount_usd"/>
+                            <field name="expected_usd"/>
+                            <field name="variance_usd"/>
+                        </tree>
+                    </field>
+                    <group>
+                        <field name="carrier_invoiced_usd" readonly="1"/>
+                        <field name="carrier_variance_usd" readonly="1"/>
+                        <field name="carrier_overbilled" readonly="1"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <!-- Menus -->
+    <menuitem id="menu_demurrage_billing" name="Facturación" parent="menu_demurrage_root" sequence="15" groups="container_demurrage.group_demurrage_billing"/>
+    <menuitem id="menu_demurrage_carrier_invoices" name="Facturas naviera" parent="menu_demurrage_billing" action="action_demurrage_carrier_invoice" sequence="10"/>
+
+    <!-- Importar contenedores bajo Operación -->
+    <menuitem id="menu_demurrage_import" name="Importar contenedores" parent="menu_demurrage_operation" action="action_demurrage_import_wizard" sequence="60"/>
+</odoo>

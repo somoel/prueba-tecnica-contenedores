@@ -61,6 +61,9 @@ class DemurrageContainer(models.Model):
     notes = fields.Text()
     correction_ids = fields.One2many(
         "demurrage.correction", "container_id", string="Correcciones")
+    carrier_invoice_line_ids = fields.One2many(
+        "demurrage.carrier.invoice.line", "container_id",
+        string="Líneas de factura naviera")
     active = fields.Boolean(default=True)
 
     eir_attachment_ids = fields.Many2many(
@@ -94,6 +97,12 @@ class DemurrageContainer(models.Model):
         compute="_compute_demurrage", store=True, currency_field="currency_id")
     customer_charge_cop = fields.Monetary(
         compute="_compute_demurrage", store=True, currency_field="cop_currency_id")
+    carrier_invoiced_usd = fields.Monetary(
+        compute="_compute_carrier_invoice", store=True, currency_field="currency_id")
+    carrier_variance_usd = fields.Monetary(
+        compute="_compute_carrier_invoice", store=True, currency_field="currency_id")
+    carrier_overbilled = fields.Boolean(
+        compute="_compute_carrier_invoice", store=True)
     exchange_rate = fields.Float(compute="_compute_demurrage", store=True)
     exchange_rate_date = fields.Date(compute="_compute_demurrage", store=True)
     missing_tariff = fields.Boolean(compute="_compute_demurrage", store=True)
@@ -120,6 +129,17 @@ class DemurrageContainer(models.Model):
             count = len(record.eir_attachment_ids)
             record.eir_count = count
             record.missing_eir = count == 0
+
+    @api.depends("carrier_invoice_line_ids", "carrier_invoice_line_ids.amount_usd",
+                 "carrier_invoice_line_ids.variance_usd")
+    def _compute_carrier_invoice(self):
+        for record in self:
+            record.carrier_invoiced_usd = sum(
+                record.carrier_invoice_line_ids.mapped("amount_usd"))
+            record.carrier_variance_usd = sum(
+                record.carrier_invoice_line_ids.mapped("variance_usd"))
+            record.carrier_overbilled = (
+                record.carrier_variance_usd or 0.0) > 0.01
 
     @api.depends("cancelled", "invoiced", "return_date", "discharge_date")
     def _compute_state(self):
