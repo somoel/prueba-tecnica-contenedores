@@ -6,3 +6,4 @@ from . import demurrage_customer_agreement
 from . import res_partner
 from . import demurrage_bl
 from . import demurrage_container
+from . import res_config_settings
