@@ -13,3 +13,4 @@ from . import test_eir
 from . import test_state_wizards
 from . import test_views
 from . import test_parsing
+from . import test_import
