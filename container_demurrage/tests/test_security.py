@@ -16,6 +16,8 @@ class TestSecurity(TransactionCase):
         cls.BL = cls.env["demurrage.bl"]
         cls.Container = cls.env["demurrage.container"]
         cls.Correction = cls.env["demurrage.correction"]
+        cls.CarrierInvoice = cls.env["demurrage.carrier.invoice"]
+        cls.InvoiceWizard = cls.env["demurrage.invoice.wizard"]
 
         cls.partner = cls.Partner.create({"name": "Cliente Test"})
         cls.line = cls.ShippingLine.create({"name": "Atlantic", "code": "ATL"})
@@ -112,3 +114,27 @@ class TestSecurity(TransactionCase):
             groups="base.group_user,container_demurrage.group_demurrage_operations")
         read_corr = self.Correction.with_user(user).browse(corr.id)
         self.assertEqual(read_corr.reason, "Ajuste de fecha")
+
+    def test_operations_cannot_create_invoice_from_wizard(self):
+        user = new_test_user(
+            self.env, login="ops_nowiz",
+            groups="base.group_user,container_demurrage.group_demurrage_operations")
+        with self.assertRaises(AccessError):
+            self.InvoiceWizard.with_user(user).create({
+                "partner_id": self.partner.id,
+                "container_ids": [],
+            })
+
+    def test_operations_carrier_invoice_read_only(self):
+        ci = self.CarrierInvoice.create({
+            "name": "CI001",
+            "shipping_line_id": self.line.id,
+            "invoice_date": date(2026, 3, 1),
+        })
+        user = new_test_user(
+            self.env, login="ops_ci",
+            groups="base.group_user,container_demurrage.group_demurrage_operations")
+        read_ci = self.CarrierInvoice.with_user(user).browse(ci.id)
+        self.assertEqual(read_ci.name, "CI001")
+        with self.assertRaises(AccessError):
+            ci.with_user(user).write({"notes": "x"})

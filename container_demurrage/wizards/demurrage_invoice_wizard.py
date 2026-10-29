@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from odoo import models, fields, api
-from odoo.exceptions import UserError, ValidationError
+from odoo.exceptions import UserError, ValidationError, AccessError
 
 
 class DemurrageInvoiceWizard(models.TransientModel):
@@ -17,6 +17,12 @@ class DemurrageInvoiceWizard(models.TransientModel):
 
     def action_create_invoice(self):
         self.ensure_one()
+        if not self.env.is_superuser() and not (
+                self.env.user.has_group(
+                    "container_demurrage.group_demurrage_billing")
+                or self.env.user.has_group(
+                    "container_demurrage.group_demurrage_manager")):
+            raise AccessError("No tiene permisos para facturar.")
         containers = self.container_ids
         if not containers:
             raise UserError("Debe seleccionar al menos un contenedor.")
@@ -118,8 +124,8 @@ class DemurrageInvoiceWizard(models.TransientModel):
 
         reference = move.name or move.ref or "Factura demora"
         for c in containers:
-            c.sudo().action_mark_invoiced(reference, self.invoice_date)
-            c.sudo().write({"invoice_id": move.id})
+            c.action_mark_invoiced(reference, self.invoice_date)
+            c.write({"invoice_id": move.id})
 
         return {
             "type": "ir.actions.act_window",
