@@ -138,3 +138,15 @@ class TestSecurity(TransactionCase):
         self.assertEqual(read_ci.name, "CI001")
         with self.assertRaises(AccessError):
             ci.with_user(user).write({"notes": "x"})
+
+    def test_system_group_implies_manager_and_can_read_container(self):
+        bl = self.BL.create(self._bl_vals(name="BLSYS"))
+        container = self.Container.create(
+            self._container_vals(bl, container_number="MSLU1458705"))
+        user = new_test_user(
+            self.env, login="system_user",
+            groups="base.group_system")
+        self.assertTrue(user.has_group(
+            "container_demurrage.group_demurrage_manager"))
+        read_container = self.Container.with_user(user).browse(container.id)
+        self.assertEqual(read_container.container_number, "MSLU1458705")

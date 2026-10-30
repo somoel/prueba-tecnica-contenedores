@@ -22,5 +22,9 @@
             <field name="category_id" ref="module_category_demurrage"/>
             <field name="implied_ids" eval="[(4, ref('container_demurrage.group_demurrage_billing'))]"/>
         </record>
+
+        <record id="base.group_system" model="res.groups">
+            <field name="implied_ids" eval="[(4, ref('container_demurrage.group_demurrage_manager'))]"/>
+        </record>
     </data>
 </odoo>
