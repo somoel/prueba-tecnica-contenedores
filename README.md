@@ -5,10 +5,10 @@ Módulo `container_demurrage` para **Logística Puerto Alto S.A.S.** (caso ficti
 ![CI](https://github.com/somoel/prueba-tecnica-contenedores/actions/workflows/ci.yml/badge.svg)
 
 - **Repositorio:** https://github.com/somoel/prueba-tecnica-contenedores
-- **Release:** https://github.com/somoel/prueba-tecnica-contenedores/releases/tag/v1.0.0
+- **Release:** https://github.com/somoel/prueba-tecnica-contenedores/releases/tag/v1.0.1
 - **Plataforma:** Odoo 17 Community, Python 3.12, PostgreSQL 16
 - **Estado:** instalable en base nueva, con y sin datos demo
-- **Pruebas:** 200 pruebas ejecutadas, 0 fallos, 0 errores
+- **Pruebas:** 204 pruebas ejecutadas, 0 fallos, 0 errores
 - **Metodología:** TDD, con commits pequeños en español
 - **Trazabilidad:** [`PLAN.md`](PLAN.md) y [`docs/tdd.md`](docs/tdd.md)
 
