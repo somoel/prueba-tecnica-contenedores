@@ -9,6 +9,7 @@ from . import test_acceptance_cases
 from . import test_extended_cases
 from . import test_security
 from . import test_states
+from . import test_invoiced_web_read
 from . import test_eir
 from . import test_state_wizards
 from . import test_views

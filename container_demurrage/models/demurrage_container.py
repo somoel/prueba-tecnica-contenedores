@@ -117,7 +117,7 @@ class DemurrageContainer(models.Model):
     is_due_soon = fields.Boolean(compute="_compute_demurrage", store=True)
     is_overdue = fields.Boolean(compute="_compute_demurrage", store=True)
     due_date = fields.Date(compute="_compute_demurrage", store=True)
-    tier_breakdown = fields.Text(compute="_compute_demurrage")
+    tier_breakdown = fields.Text(compute="_compute_demurrage", store=True)
     calculation_status = fields.Selection(
         [("pending", "Pendiente"), ("ok", "OK"),
          ("missing_tariff", "Sin tarifa"),
@@ -259,6 +259,8 @@ class DemurrageContainer(models.Model):
                 continue
 
             if record.invoiced and record.invoiced_at:
+                record.tariff_id = record._find_tariff()
+                record.agreement_id = record._find_agreement()
                 record.days_out = record.invoiced_days_out
                 record.free_days = record.invoiced_free_days
                 record.due_date = record.invoiced_due_date
